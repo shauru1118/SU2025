@@ -1,8 +1,0 @@
-../Core/Src/pressTemp.c:28:6:MS_Init	24	static
-../Core/Src/pressTemp.c:40:6:MS_ReadData	24	static
-../Core/Src/pressTemp.c:48:6:_msReadAdc	16	static
-../Core/Src/pressTemp.c:52:6:_msReadProm	16	static
-../Core/Src/pressTemp.c:61:6:_calculate	112	static
-../Core/Src/pressTemp.c:80:6:_msSendCmd	16	static
-../Core/Src/pressTemp.c:86:6:_msSendCmdGetData16	24	static
-../Core/Src/pressTemp.c:103:6:_msSendCmdGetData32	32	static
