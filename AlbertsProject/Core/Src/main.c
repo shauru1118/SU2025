@@ -116,9 +116,7 @@ int main(void)
 	LED2_GPIO_Port->ODR &= ~LED2_Pin;
 	LED3_GPIO_Port->ODR &= ~LED3_Pin;
 	LED4_GPIO_Port->ODR &= ~LED4_Pin;
-	HAL_Delay(500);
 
-//	lastTime = HAL_GetTick();
 
   /* USER CODE END 2 */
 
