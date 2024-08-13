@@ -13,7 +13,7 @@ SPI_HandleTypeDef *_ms_hspi1;
 GPIO_TypeDef *_ms_nssPort;
 uint16_t _ms_nssPin;
 
-uint16_t _calibrCoeff[7] = {0x00};
+uint16_t _calibrCoeff[7] = { 0x00 };
 
 void _msReadAdc(uint32_t bufForPresTemp[]);
 void _msReadProm(uint16_t bufForCalibrCoef[]);
@@ -32,6 +32,7 @@ void MS_Init(SPI_HandleTypeDef *hspi, GPIO_TypeDef *port, uint16_t pin) {
 	_ms_nssPin = pin;
 
 	_msSendCmd(MS_RESET);
+	HAL_Delay(100);
 
 	_msReadProm(_calibrCoeff);
 
@@ -71,6 +72,21 @@ void _calculate(uint32_t dataWithPressTemp[], int32_t bufer[]) {
 	int64_t SENS = _calibrCoeff[1] * (2 << 14)
 			+ (_calibrCoeff[3] * dT) / (2 << 7);
 
+	if (TEMP < 2000) {
+			uint32_t T2 = (dT * dT) / (2 << 30);
+			uint32_t OFF2 = 5 * (TEMP - 2000) * (TEMP - 2000) / 2;
+			uint32_t SENS2 = 5 * (TEMP - 2000) * (TEMP - 2000) / (2 * 2);
+
+			if (TEMP < -1500) {
+				OFF2 = OFF2 + 7 * (TEMP + 1500) * (TEMP + 1500);
+				SENS2 = SENS2 + 11 * (TEMP + 1500) * (TEMP + 1500) / 2;
+			}
+
+			TEMP -= T2;
+			OFF -= OFF2;
+			SENS -= SENS2;
+		}
+
 	int32_t PRES = (D1 * SENS / (2 << 20) - OFF) / (2 << 14);
 
 	bufer[0] = PRES;
@@ -89,6 +105,7 @@ void _msSendCmdGetData16(uint8_t cmd, uint16_t bufer[], uint8_t i) {
 	_ms_nssPort->ODR &= ~_ms_nssPin;
 
 	HAL_SPI_Transmit(_ms_hspi1, &cmd, 1, 1000);
+	HAL_Delay(10);
 	HAL_SPI_Receive(_ms_hspi1, &data1, 1, 1000);
 	HAL_SPI_Receive(_ms_hspi1, &data2, 1, 1000);
 
@@ -99,12 +116,14 @@ void _msSendCmdGetData16(uint8_t cmd, uint16_t bufer[], uint8_t i) {
 	receiveData |= data2;
 
 	bufer[i] = receiveData;
+	HAL_Delay(20);
+
 }
 void _msSendCmdGetData32(uint8_t cmd, uint32_t bufer[]) {
 	uint8_t presData[3];
 	uint8_t tempData[3];
 
-	_msSendCmd(MS_D1_4096);
+	_msSendCmd(MS_D1);
 	HAL_Delay(ADC_DELAY);
 
 	_ms_nssPort->ODR &= ~_ms_nssPin;
@@ -112,7 +131,7 @@ void _msSendCmdGetData32(uint8_t cmd, uint32_t bufer[]) {
 	HAL_SPI_Receive(_ms_hspi1, presData, 3, 1000);
 	_ms_nssPort->ODR |= _ms_nssPin;
 
-	_msSendCmd(MS_D2_4096);
+	_msSendCmd(MS_D2);
 	HAL_Delay(ADC_DELAY);
 
 	_ms_nssPort->ODR &= ~_ms_nssPin;
@@ -120,18 +139,17 @@ void _msSendCmdGetData32(uint8_t cmd, uint32_t bufer[]) {
 	HAL_SPI_Receive(_ms_hspi1, tempData, 3, 1000);
 	_ms_nssPort->ODR |= _ms_nssPin;
 
-	uint32_t pres = presData[0];
+	int32_t pres = presData[0];
 	pres = pres << 8;
 	pres |= presData[1];
 	pres = pres << 8;
 	pres |= presData[2];
 
-	uint32_t temp = tempData[0];
+	int32_t temp = tempData[0];
 	temp = temp << 8;
 	temp |= tempData[1];
 	temp = temp << 8;
 	temp |= tempData[2];
-
 
 	bufer[0] = pres;
 	bufer[1] = temp;

@@ -24,6 +24,9 @@
 #define MS_D2_2048 0x56
 #define MS_D2_4096 0x58
 
+#define MS_D1 MS_D1_1024
+#define MS_D2 MS_D2_1024
+
 #define ADC_DELAY 12
 
 void MS_Init(SPI_HandleTypeDef *hspi, GPIO_TypeDef *port, uint16_t pin);

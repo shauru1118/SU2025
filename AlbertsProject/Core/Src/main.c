@@ -47,14 +47,13 @@ SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
 int32_t MS_Data[2];
+int sizeOfBufferToLora = 20;
 
 struct {
 	int32_t press;
 	int32_t temp;
 
 } SensorsData;
-
-char buffer[100];
 
 /* USER CODE END PV */
 
@@ -63,7 +62,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 /* USER CODE BEGIN PFP */
-void writeData(uint8_t bufer[], uint8_t data);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -103,20 +102,21 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
-	HAL_Delay(100);
-
-	LORA_Init(&hspi1, LORA_NSS_GPIO_Port, LORA_NSS_Pin);
-	MS_Init(&hspi1, MS_NSS_GPIO_Port, MS_NSS_Pin);
-
 	LED2_GPIO_Port->ODR |= LED2_Pin;
 	LED3_GPIO_Port->ODR |= LED3_Pin;
 	LED4_GPIO_Port->ODR |= LED4_Pin;
-	HAL_Delay(500);
+
+	HAL_Delay(2000);
 
 	LED2_GPIO_Port->ODR &= ~LED2_Pin;
 	LED3_GPIO_Port->ODR &= ~LED3_Pin;
 	LED4_GPIO_Port->ODR &= ~LED4_Pin;
 
+	if (LORA_Init(&hspi1, LORA_NSS_GPIO_Port, LORA_NSS_Pin))
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+	LED3_GPIO_Port->ODR &= ~LED3_Pin;
+
+	MS_Init(&hspi1, MS_NSS_GPIO_Port, MS_NSS_Pin);
 
   /* USER CODE END 2 */
 
@@ -128,13 +128,22 @@ int main(void)
 		SensorsData.press = MS_Data[0];
 		SensorsData.temp = MS_Data[1];
 
-		snprintf(buffer, 100, "%ld;%ld;", SensorsData.press, SensorsData.temp);
+		char buffer[sizeOfBufferToLora];
 
-		uint32_t intBuffer = (uint32_t) buffer;
+		snprintf(buffer, sizeOfBufferToLora, "%ld;%ld;\n", SensorsData.press,
+				SensorsData.temp);
 
-		LORA_TransmitData(intBuffer, 20);
+		uint8_t bufferToLora[sizeOfBufferToLora];
+
+		for (int i = 0; i < sizeOfBufferToLora; i++) {
+			bufferToLora[i] = (uint8_t) buffer[i];
+		}
+
+		LORA_TransmitData(bufferToLora, sizeOfBufferToLora);
 
 		HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+
+		HAL_Delay(100);
 
     /* USER CODE END WHILE */
 

@@ -99,6 +99,15 @@ int main(void) {
 	MX_USB_DEVICE_Init();
 	/* USER CODE BEGIN 2 */
 
+	HAL_GPIO_TogglePin(LED_ON_GPIO_Port, LED_ON_Pin);
+	HAL_GPIO_TogglePin(LED_ERR_GPIO_Port, LED_ERR_Pin);
+	HAL_GPIO_TogglePin(LED_RX_GPIO_Port, LED_RX_Pin);
+	HAL_GPIO_TogglePin(LED_TX_GPIO_Port, LED_TX_Pin);
+	HAL_Delay(2000);
+	HAL_GPIO_TogglePin(LED_ON_GPIO_Port, LED_ON_Pin);
+	HAL_GPIO_TogglePin(LED_ERR_GPIO_Port, LED_ERR_Pin);
+	HAL_GPIO_TogglePin(LED_RX_GPIO_Port, LED_RX_Pin);
+	HAL_GPIO_TogglePin(LED_TX_GPIO_Port, LED_TX_Pin);
 
 	while (!hUsbDeviceFS.ep_in[CDC_IN_EP & 0xFU].is_used)
 		;
@@ -109,8 +118,13 @@ int main(void) {
 
 	if (LORA_Init(&hspi1, SPI1_NSS_GPIO_Port, SPI1_NSS_Pin)) {
 		LED_ERR_GPIO_Port->ODR |= LED_ERR_Pin;
+		HAL_Delay(500);
+		LED_ERR_GPIO_Port->ODR &= ~LED_ERR_Pin;
+
 	} else {
 		LED_ON_GPIO_Port->ODR |= LED_ON_Pin;
+		HAL_Delay(500);
+		LED_ON_GPIO_Port->ODR &= ~LED_ON_Pin;
 	}
 
 	/* USER CODE END 2 */
@@ -122,15 +136,16 @@ int main(void) {
 
 		if (packetSize) {
 			CDC_Transmit_FS(receiveData, packetSize);
+			HAL_GPIO_TogglePin(LED_RX_GPIO_Port, LED_RX_Pin);
 		}
 
 		if (hCDC->RxLength) {
-			LED_ON_GPIO_Port->ODR &= ~LED_ON_Pin;
+			LED_TX_GPIO_Port->ODR &= ~LED_TX_Pin;
 
 			LORA_TransmitData(hCDC->RxBuffer, hCDC->RxLength);
 			hCDC->RxLength = 0;
 
-			LED_ON_GPIO_Port->ODR |= LED_ON_Pin;
+			LED_TX_GPIO_Port->ODR |= LED_TX_Pin;
 
 		}
 
@@ -246,7 +261,8 @@ static void MX_GPIO_Init(void) {
 	HAL_GPIO_WritePin(SPI1_NSS2_GPIO_Port, SPI1_NSS2_Pin, GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */
-	HAL_GPIO_WritePin(GPIOB, LED_ON_Pin | LED_ERR_Pin, GPIO_PIN_RESET);
+	HAL_GPIO_WritePin(GPIOB, LED_ON_Pin | LED_RX_Pin | LED_TX_Pin | LED_ERR_Pin,
+			GPIO_PIN_RESET);
 
 	/*Configure GPIO pin : SPI1_NSS_Pin */
 	GPIO_InitStruct.Pin = SPI1_NSS_Pin;
@@ -262,8 +278,8 @@ static void MX_GPIO_Init(void) {
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(SPI1_NSS2_GPIO_Port, &GPIO_InitStruct);
 
-	/*Configure GPIO pins : LED_ON_Pin LED_ERR_Pin */
-	GPIO_InitStruct.Pin = LED_ON_Pin | LED_ERR_Pin;
+	/*Configure GPIO pins : LED_ON_Pin LED_RX_Pin LED_TX_Pin LED_ERR_Pin */
+	GPIO_InitStruct.Pin = LED_ON_Pin | LED_RX_Pin | LED_TX_Pin | LED_ERR_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Pull = GPIO_NOPULL;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
