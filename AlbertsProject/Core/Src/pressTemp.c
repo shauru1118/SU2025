@@ -67,7 +67,7 @@ void _msReadProm(uint16_t bufForCalibrCoef[]) {
 	_msSendCmdGetData16(ADRS[6], bufForCalibrCoef, 6);
 
 	_realCalibrCoeff.Tref = (_calibrCoeff[5] * (2 << 7));
-	_realCalibrCoeff.TempSens = _calibrCoeff[6] / (2 << 22) + 1;
+	_realCalibrCoeff.TempSens = _calibrCoeff[6] / (2 << 22);
 	_realCalibrCoeff.OffT1 = _calibrCoeff[2] * (2 << 15);
 	_realCalibrCoeff.Tco = (_calibrCoeff[4]) / (2 << 6);
 	_realCalibrCoeff.SensT1 = _calibrCoeff[1] * (2 << 14);

@@ -37,15 +37,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  00015994  00000000  00000000  0000dfbd  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   0000866a  00000000  00000000  00023951  2**0
+ 17 .debug_line   00008667  00000000  00000000  00023951  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    00084c5f  00000000  00000000  0002bfbb  2**0
+ 18 .debug_str    00084c5f  00000000  00000000  0002bfb8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  000b0c1a  2**0
+ 19 .comment      00000043  00000000  00000000  000b0c17  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  00001e48  00000000  00000000  000b0c60  2**2
+ 20 .debug_frame  00001e48  00000000  00000000  000b0c5c  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 00000057  00000000  00000000  000b2aa8  2**0
+ 21 .debug_line_str 00000057  00000000  00000000  000b2aa4  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1614,7 +1614,7 @@ void _msReadProm(uint16_t bufForCalibrCoef[]) {
  8000d42:	eef8 7ae7 	vcvt.f32.s32	s15, s15
  8000d46:	4b22      	ldr	r3, [pc, #136]	@ (8000dd0 <_msReadProm+0xf4>)
  8000d48:	edc3 7a00 	vstr	s15, [r3]
-	_realCalibrCoeff.TempSens = _calibrCoeff[6] / (2 << 22) + 1;
+	_realCalibrCoeff.TempSens = _calibrCoeff[6] / (2 << 22);
  8000d4c:	4b1f      	ldr	r3, [pc, #124]	@ (8000dcc <_msReadProm+0xf0>)
  8000d4e:	899b      	ldrh	r3, [r3, #12]
  8000d50:	2b00      	cmp	r3, #0
@@ -1623,50 +1623,50 @@ void _msReadProm(uint16_t bufForCalibrCoef[]) {
  8000d56:	441a      	add	r2, r3
  8000d58:	4613      	mov	r3, r2
  8000d5a:	15db      	asrs	r3, r3, #23
- 8000d5c:	3301      	adds	r3, #1
- 8000d5e:	ee07 3a90 	vmov	s15, r3
- 8000d62:	eef8 7ae7 	vcvt.f32.s32	s15, s15
- 8000d66:	4b1a      	ldr	r3, [pc, #104]	@ (8000dd0 <_msReadProm+0xf4>)
- 8000d68:	edc3 7a01 	vstr	s15, [r3, #4]
+ 8000d5c:	ee07 3a90 	vmov	s15, r3
+ 8000d60:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 8000d64:	4b1a      	ldr	r3, [pc, #104]	@ (8000dd0 <_msReadProm+0xf4>)
+ 8000d66:	edc3 7a01 	vstr	s15, [r3, #4]
 	_realCalibrCoeff.OffT1 = _calibrCoeff[2] * (2 << 15);
- 8000d6c:	4b17      	ldr	r3, [pc, #92]	@ (8000dcc <_msReadProm+0xf0>)
- 8000d6e:	889b      	ldrh	r3, [r3, #4]
- 8000d70:	041b      	lsls	r3, r3, #16
- 8000d72:	ee07 3a90 	vmov	s15, r3
- 8000d76:	eef8 7ae7 	vcvt.f32.s32	s15, s15
- 8000d7a:	4b15      	ldr	r3, [pc, #84]	@ (8000dd0 <_msReadProm+0xf4>)
- 8000d7c:	edc3 7a02 	vstr	s15, [r3, #8]
+ 8000d6a:	4b18      	ldr	r3, [pc, #96]	@ (8000dcc <_msReadProm+0xf0>)
+ 8000d6c:	889b      	ldrh	r3, [r3, #4]
+ 8000d6e:	041b      	lsls	r3, r3, #16
+ 8000d70:	ee07 3a90 	vmov	s15, r3
+ 8000d74:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 8000d78:	4b15      	ldr	r3, [pc, #84]	@ (8000dd0 <_msReadProm+0xf4>)
+ 8000d7a:	edc3 7a02 	vstr	s15, [r3, #8]
 	_realCalibrCoeff.Tco = (_calibrCoeff[4]) / (2 << 6);
- 8000d80:	4b12      	ldr	r3, [pc, #72]	@ (8000dcc <_msReadProm+0xf0>)
- 8000d82:	891b      	ldrh	r3, [r3, #8]
- 8000d84:	09db      	lsrs	r3, r3, #7
- 8000d86:	b29b      	uxth	r3, r3
- 8000d88:	ee07 3a90 	vmov	s15, r3
- 8000d8c:	eef8 7ae7 	vcvt.f32.s32	s15, s15
- 8000d90:	4b0f      	ldr	r3, [pc, #60]	@ (8000dd0 <_msReadProm+0xf4>)
- 8000d92:	edc3 7a03 	vstr	s15, [r3, #12]
+ 8000d7e:	4b13      	ldr	r3, [pc, #76]	@ (8000dcc <_msReadProm+0xf0>)
+ 8000d80:	891b      	ldrh	r3, [r3, #8]
+ 8000d82:	09db      	lsrs	r3, r3, #7
+ 8000d84:	b29b      	uxth	r3, r3
+ 8000d86:	ee07 3a90 	vmov	s15, r3
+ 8000d8a:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 8000d8e:	4b10      	ldr	r3, [pc, #64]	@ (8000dd0 <_msReadProm+0xf4>)
+ 8000d90:	edc3 7a03 	vstr	s15, [r3, #12]
 	_realCalibrCoeff.SensT1 = _calibrCoeff[1] * (2 << 14);
- 8000d96:	4b0d      	ldr	r3, [pc, #52]	@ (8000dcc <_msReadProm+0xf0>)
- 8000d98:	885b      	ldrh	r3, [r3, #2]
- 8000d9a:	03db      	lsls	r3, r3, #15
- 8000d9c:	ee07 3a90 	vmov	s15, r3
- 8000da0:	eef8 7ae7 	vcvt.f32.s32	s15, s15
- 8000da4:	4b0a      	ldr	r3, [pc, #40]	@ (8000dd0 <_msReadProm+0xf4>)
- 8000da6:	edc3 7a04 	vstr	s15, [r3, #16]
+ 8000d94:	4b0d      	ldr	r3, [pc, #52]	@ (8000dcc <_msReadProm+0xf0>)
+ 8000d96:	885b      	ldrh	r3, [r3, #2]
+ 8000d98:	03db      	lsls	r3, r3, #15
+ 8000d9a:	ee07 3a90 	vmov	s15, r3
+ 8000d9e:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 8000da2:	4b0b      	ldr	r3, [pc, #44]	@ (8000dd0 <_msReadProm+0xf4>)
+ 8000da4:	edc3 7a04 	vstr	s15, [r3, #16]
 	_realCalibrCoeff.Tcs = (_calibrCoeff[3]) / (2 << 7);
- 8000daa:	4b08      	ldr	r3, [pc, #32]	@ (8000dcc <_msReadProm+0xf0>)
- 8000dac:	88db      	ldrh	r3, [r3, #6]
- 8000dae:	0a1b      	lsrs	r3, r3, #8
- 8000db0:	b29b      	uxth	r3, r3
- 8000db2:	ee07 3a90 	vmov	s15, r3
- 8000db6:	eef8 7ae7 	vcvt.f32.s32	s15, s15
- 8000dba:	4b05      	ldr	r3, [pc, #20]	@ (8000dd0 <_msReadProm+0xf4>)
- 8000dbc:	edc3 7a05 	vstr	s15, [r3, #20]
+ 8000da8:	4b08      	ldr	r3, [pc, #32]	@ (8000dcc <_msReadProm+0xf0>)
+ 8000daa:	88db      	ldrh	r3, [r3, #6]
+ 8000dac:	0a1b      	lsrs	r3, r3, #8
+ 8000dae:	b29b      	uxth	r3, r3
+ 8000db0:	ee07 3a90 	vmov	s15, r3
+ 8000db4:	eef8 7ae7 	vcvt.f32.s32	s15, s15
+ 8000db8:	4b05      	ldr	r3, [pc, #20]	@ (8000dd0 <_msReadProm+0xf4>)
+ 8000dba:	edc3 7a05 	vstr	s15, [r3, #20]
 }
- 8000dc0:	bf00      	nop
- 8000dc2:	3708      	adds	r7, #8
- 8000dc4:	46bd      	mov	sp, r7
- 8000dc6:	bd80      	pop	{r7, pc}
+ 8000dbe:	bf00      	nop
+ 8000dc0:	3708      	adds	r7, #8
+ 8000dc2:	46bd      	mov	sp, r7
+ 8000dc4:	bd80      	pop	{r7, pc}
+ 8000dc6:	bf00      	nop
  8000dc8:	20000004 	.word	0x20000004
  8000dcc:	20000104 	.word	0x20000104
  8000dd0:	20000114 	.word	0x20000114
