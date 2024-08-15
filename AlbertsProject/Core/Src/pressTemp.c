@@ -15,12 +15,12 @@ uint16_t _ms_nssPin;
 
 uint16_t _calibrCoeff[7] = { 0x00 };
 struct {
-	float Tref;
-	float TempSens;
-	float OffT1;
-	float Tco;
-	float SensT1;
-	float Tcs;
+	double Tref;
+	double TempSens;
+	double OffT1;
+	double Tco;
+	double SensT1;
+	double Tcs;
 } _realCalibrCoeff;
 
 void _msReadAdc(uint32_t bufForPresTemp[]);
