@@ -30,4 +30,4 @@
 #define ADC_DELAY 12
 
 void MS_Init(SPI_HandleTypeDef *hspi, GPIO_TypeDef *port, uint16_t pin);
-void MS_ReadData(int32_t endBufer[]);
+void MS_ReadData(uint32_t endBufer[]);

@@ -14,10 +14,18 @@ GPIO_TypeDef *_ms_nssPort;
 uint16_t _ms_nssPin;
 
 uint16_t _calibrCoeff[7] = { 0x00 };
+struct {
+	float Tref;
+	float TempSens;
+	float OffT1;
+	float Tco;
+	float SensT1;
+	float Tcs;
+} _realCalibrCoeff;
 
 void _msReadAdc(uint32_t bufForPresTemp[]);
 void _msReadProm(uint16_t bufForCalibrCoef[]);
-void _calculate(uint32_t dataWithPressTemp[], int32_t bufer[]);
+void _calculate(uint32_t dataWithPressTemp[], uint32_t bufer[]);
 
 void _msSendCmd(uint8_t cmd);
 void _msSendCmdGetData16(uint8_t cmd, uint16_t bufer[], uint8_t i);
@@ -38,7 +46,7 @@ void MS_Init(SPI_HandleTypeDef *hspi, GPIO_TypeDef *port, uint16_t pin) {
 
 }
 
-void MS_ReadData(int32_t endBufer[]) {
+void MS_ReadData(uint32_t endBufer[]) {
 	uint32_t startPressTemp[2];
 
 	_msReadAdc(startPressTemp);
@@ -57,37 +65,42 @@ void _msReadProm(uint16_t bufForCalibrCoef[]) {
 	_msSendCmdGetData16(ADRS[4], bufForCalibrCoef, 4);
 	_msSendCmdGetData16(ADRS[5], bufForCalibrCoef, 5);
 	_msSendCmdGetData16(ADRS[6], bufForCalibrCoef, 6);
+
+	_realCalibrCoeff.Tref = (_calibrCoeff[5] * (2 << 7));
+	_realCalibrCoeff.TempSens = _calibrCoeff[6] / (2 << 22);
+	_realCalibrCoeff.OffT1 = _calibrCoeff[2] * (2 << 15);
+	_realCalibrCoeff.Tco = (_calibrCoeff[4]) / (2 << 6);
+	_realCalibrCoeff.SensT1 = _calibrCoeff[1] * (2 << 14);
+	_realCalibrCoeff.Tcs = (_calibrCoeff[3]) / (2 << 7);
 }
 
-void _calculate(uint32_t dataWithPressTemp[], int32_t bufer[]) {
+void _calculate(uint32_t dataWithPressTemp[], uint32_t bufer[]) {
 	uint32_t D1 = dataWithPressTemp[0];
 	uint32_t D2 = dataWithPressTemp[1];
 
-	int32_t dT = D2 - (_calibrCoeff[5] * (2 << 7));
-	int32_t TEMP = 2000 + dT * _calibrCoeff[6] / (2 << 22);
+	float dT = D2 - _realCalibrCoeff.Tref;
+	float TEMP = 2000 + dT * _realCalibrCoeff.TempSens;
 
-	int64_t OFF = _calibrCoeff[2] * (2 << 15)
-			+ (_calibrCoeff[4] * dT) / (2 << 6);
+	float OFF = _realCalibrCoeff.OffT1 + _realCalibrCoeff.Tco * dT;
 
-	int64_t SENS = _calibrCoeff[1] * (2 << 14)
-			+ (_calibrCoeff[3] * dT) / (2 << 7);
+	float SENS = _realCalibrCoeff.SensT1 + _realCalibrCoeff.Tcs * dT;
 
 	if (TEMP < 2000) {
-			uint32_t T2 = (dT * dT) / (2 << 30);
-			uint32_t OFF2 = 5 * (TEMP - 2000) * (TEMP - 2000) / 2;
-			uint32_t SENS2 = 5 * (TEMP - 2000) * (TEMP - 2000) / (2 * 2);
+		float T2 = (dT * dT) / (2 << 30);
+		float OFF2 = 5 * (TEMP - 2000) * (TEMP - 2000) / 2;
+		float SENS2 = 5 * (TEMP - 2000) * (TEMP - 2000) / (2 * 2);
 
-			if (TEMP < -1500) {
-				OFF2 = OFF2 + 7 * (TEMP + 1500) * (TEMP + 1500);
-				SENS2 = SENS2 + 11 * (TEMP + 1500) * (TEMP + 1500) / 2;
-			}
-
-			TEMP -= T2;
-			OFF -= OFF2;
-			SENS -= SENS2;
+		if (TEMP < -1500) {
+			OFF2 = OFF2 + 7 * (TEMP + 1500) * (TEMP + 1500);
+			SENS2 = SENS2 + 11 * (TEMP + 1500) * (TEMP + 1500) / 2;
 		}
 
-	int32_t PRES = (D1 * SENS / (2 << 20) - OFF) / (2 << 14);
+		TEMP -= T2;
+		OFF -= OFF2;
+		SENS -= SENS2;
+	}
+
+	float PRES = (D1 * SENS / (2 << 20) - OFF) / (2 << 14);
 
 	bufer[0] = PRES;
 	bufer[1] = TEMP;
