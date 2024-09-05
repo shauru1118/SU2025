@@ -134,19 +134,19 @@ int main(void) {
 	while (1) {
 		uint8_t packetSize = LORA_ReceiveData(receiveData);
 
+
 		if (packetSize) {
 			CDC_Transmit_FS(receiveData, packetSize);
 			HAL_GPIO_TogglePin(LED_RX_GPIO_Port, LED_RX_Pin);
 		}
 
 		if (hCDC->RxLength) {
-			LED_TX_GPIO_Port->ODR &= ~LED_TX_Pin;
+			LED_TX_GPIO_Port->ODR |= LED_TX_Pin;
 
 			LORA_TransmitData(hCDC->RxBuffer, hCDC->RxLength);
 			hCDC->RxLength = 0;
 
-			LED_TX_GPIO_Port->ODR |= LED_TX_Pin;
-
+			LED_TX_GPIO_Port->ODR &= ~LED_TX_Pin;
 		}
 
 		/* USER CODE END WHILE */

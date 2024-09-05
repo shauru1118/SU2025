@@ -203,3 +203,4 @@ VP_SYS_VS_Systick.Signal=SYS_VS_Systick
 board=custom
 isbadioc=false
 isbadioc=false
+isbadioc=false

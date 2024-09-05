@@ -37,15 +37,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_macro  00018366  00000000  00000000  0001dc99  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_line   00012494  00000000  00000000  00035fff  2**0
+ 17 .debug_line   00011e25  00000000  00000000  00035fff  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_str    00088774  00000000  00000000  00048493  2**0
+ 18 .debug_str    0008876b  00000000  00000000  00047e24  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .comment      00000043  00000000  00000000  000d0c07  2**0
+ 19 .comment      00000043  00000000  00000000  000d058f  2**0
                   CONTENTS, READONLY
- 20 .debug_frame  000035d4  00000000  00000000  000d0c4c  2**2
+ 20 .debug_frame  000035d4  00000000  00000000  000d05d4  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 21 .debug_line_str 0000004e  00000000  00000000  000d4220  2**0
+ 21 .debug_line_str 00000045  00000000  00000000  000d3ba8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -487,6 +487,7 @@ int main(void) {
  80005a0:	4603      	mov	r3, r0
  80005a2:	71fb      	strb	r3, [r7, #7]
 
+
 		if (packetSize) {
  80005a4:	79fb      	ldrb	r3, [r7, #7]
  80005a6:	2b00      	cmp	r3, #0
@@ -509,11 +510,11 @@ int main(void) {
  80005c2:	f8d3 320c 	ldr.w	r3, [r3, #524]	@ 0x20c
  80005c6:	2b00      	cmp	r3, #0
  80005c8:	d0e7      	beq.n	800059a <main+0xd6>
-			LED_TX_GPIO_Port->ODR &= ~LED_TX_Pin;
+			LED_TX_GPIO_Port->ODR |= LED_TX_Pin;
  80005ca:	4b0f      	ldr	r3, [pc, #60]	@ (8000608 <main+0x144>)
  80005cc:	695b      	ldr	r3, [r3, #20]
  80005ce:	4a0e      	ldr	r2, [pc, #56]	@ (8000608 <main+0x144>)
- 80005d0:	f423 7380 	bic.w	r3, r3, #256	@ 0x100
+ 80005d0:	f443 7380 	orr.w	r3, r3, #256	@ 0x100
  80005d4:	6153      	str	r3, [r2, #20]
 
 			LORA_TransmitData(hCDC->RxBuffer, hCDC->RxLength);
@@ -533,11 +534,11 @@ int main(void) {
  80005f4:	2200      	movs	r2, #0
  80005f6:	f8c3 220c 	str.w	r2, [r3, #524]	@ 0x20c
 
-			LED_TX_GPIO_Port->ODR |= LED_TX_Pin;
+			LED_TX_GPIO_Port->ODR &= ~LED_TX_Pin;
  80005fa:	4b03      	ldr	r3, [pc, #12]	@ (8000608 <main+0x144>)
  80005fc:	695b      	ldr	r3, [r3, #20]
  80005fe:	4a02      	ldr	r2, [pc, #8]	@ (8000608 <main+0x144>)
- 8000600:	f443 7380 	orr.w	r3, r3, #256	@ 0x100
+ 8000600:	f423 7380 	bic.w	r3, r3, #256	@ 0x100
  8000604:	6153      	str	r3, [r2, #20]
 	while (1) {
  8000606:	e7c8      	b.n	800059a <main+0xd6>
