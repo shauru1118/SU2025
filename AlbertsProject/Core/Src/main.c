@@ -25,6 +25,7 @@
 
 #include "pressTemp.h"
 #include "myLoRa.h"
+#include "accelGyro.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
