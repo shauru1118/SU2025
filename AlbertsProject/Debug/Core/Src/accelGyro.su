@@ -1,1 +1,4 @@
-../Core/Src/accelGyro.c:19:6:LSM_Init	24	static
+../Core/Src/accelGyro.c:17:9:LSM_Init	32	static
+../Core/Src/accelGyro.c:31:6:LSM_ReadData	40	static
+../Core/Src/accelGyro.c:46:9:_lsmReadReg	16	static
+../Core/Src/accelGyro.c:55:6:_lsmWriteReg	16	static

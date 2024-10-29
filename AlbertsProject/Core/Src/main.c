@@ -48,6 +48,7 @@ SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
 uint32_t MS_Data[2];
+int16_t LSM_Data[3];
 int sizeOfBufferToLora = 100;
 
 struct {
@@ -125,11 +126,19 @@ int main(void) {
 	LED3_GPIO_Port->ODR &= ~LED3_Pin;
 	LED4_GPIO_Port->ODR &= ~LED4_Pin;
 
-	if (LORA_Init(&hspi1, LORA_NSS_GPIO_Port, LORA_NSS_Pin))
+	if (LORA_Init(&hspi1, LORA_NSS_GPIO_Port, LORA_NSS_Pin)) {
 		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-	LED3_GPIO_Port->ODR &= ~LED3_Pin;
+		HAL_Delay(1000);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+	}
 
 	MS_Init(&hspi1, MS_NSS_GPIO_Port, MS_NSS_Pin);
+
+	if (LSM_Init(&hspi1, LSM_NSS_GPIO_Port, LSM_NSS_Pin)) {
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+		HAL_Delay(3000);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+	}
 
 	/* USER CODE END 2 */
 
@@ -137,15 +146,21 @@ int main(void) {
 	/* USER CODE BEGIN WHILE */
 	while (1) {
 		MS_ReadData(MS_Data);
+		LSM_ReadData(LSM_Data);
 
 		SensorsData.time = HAL_GetTick();
 		SensorsData.press = MS_Data[0];
 		SensorsData.temp = MS_Data[1];
+		SensorsData.accel1 = LSM_Data[0];
+		SensorsData.accel2 = LSM_Data[1];
+		SensorsData.accel3 = LSM_Data[2];
 
 		char buffer[sizeOfBufferToLora];
 
 		uint8_t sizeOfSnprintf = snprintf(buffer, sizeOfBufferToLora,
-				"1;%ld;%ld;%ld;1;1;1;1;1;1\n", SensorsData.time, SensorsData.press, SensorsData.temp);
+				"%s;%ld;1;%ld;%ld;%ld;%ld;%ld;1;1\n", SensorsData.teamID,
+				SensorsData.time, SensorsData.press, SensorsData.temp,
+				SensorsData.accel1, SensorsData.accel2, SensorsData.accel3);
 
 		uint8_t bufferToLora[sizeOfSnprintf];
 		bufferToLora[0] = sizeOfSnprintf;
