@@ -15,12 +15,12 @@ uint16_t _ms_nssPin;
 
 uint16_t _calibrCoeff[7] = { 0x00 };
 struct {
-	double Tref;
-	double TempSens;
-	double OffT1;
-	double Tco;
-	double SensT1;
-	double Tcs;
+	float Tref;
+	float TempSens;
+	float OffT1;
+	float Tco;
+	float SensT1;
+	float Tcs;
 } _realCalibrCoeff;
 
 void _msReadAdc(uint32_t bufForPresTemp[]);
@@ -66,12 +66,12 @@ void _msReadProm(uint16_t bufForCalibrCoef[]) {
 	_msSendCmdGetData16(ADRS[5], bufForCalibrCoef, 5);
 	_msSendCmdGetData16(ADRS[6], bufForCalibrCoef, 6);
 
-	_realCalibrCoeff.Tref = (_calibrCoeff[5] * (2 << 7));
-	_realCalibrCoeff.TempSens = _calibrCoeff[6] / (2 << 22);
-	_realCalibrCoeff.OffT1 = _calibrCoeff[2] * (2 << 15);
-	_realCalibrCoeff.Tco = (_calibrCoeff[4]) / (2 << 6);
-	_realCalibrCoeff.SensT1 = _calibrCoeff[1] * (2 << 14);
-	_realCalibrCoeff.Tcs = (_calibrCoeff[3]) / (2 << 7);
+	_realCalibrCoeff.Tref = _calibrCoeff[5] * 256.0;
+	_realCalibrCoeff.TempSens = _calibrCoeff[6] / 8388608.0;
+	_realCalibrCoeff.OffT1 = _calibrCoeff[2] * (65536.0);
+	_realCalibrCoeff.Tco = (_calibrCoeff[4]) / (128.0);
+	_realCalibrCoeff.SensT1 = _calibrCoeff[1] * (32768.0);
+	_realCalibrCoeff.Tcs = (_calibrCoeff[3]) / (256.0);
 }
 
 void _calculate(uint32_t dataWithPressTemp[], uint32_t bufer[]) {
@@ -86,13 +86,13 @@ void _calculate(uint32_t dataWithPressTemp[], uint32_t bufer[]) {
 	float SENS = _realCalibrCoeff.SensT1 + _realCalibrCoeff.Tcs * dT;
 
 	if (TEMP < 2000) {
-		float T2 = (dT * dT) / (2 << 30);
-		float OFF2 = 5 * (TEMP - 2000) * (TEMP - 2000) / 2;
-		float SENS2 = 5 * (TEMP - 2000) * (TEMP - 2000) / (2 * 2);
+		float T2 = (dT * dT) / 2147483648.0;
+		float OFF2 = 5 * (TEMP - 2000) * (TEMP - 2000) / 2.0;
+		float SENS2 = 5 * (TEMP - 2000) * (TEMP - 2000) / 4.0;
 
 		if (TEMP < -1500) {
 			OFF2 = OFF2 + 7 * (TEMP + 1500) * (TEMP + 1500);
-			SENS2 = SENS2 + 11 * (TEMP + 1500) * (TEMP + 1500) / 2;
+			SENS2 = SENS2 + 11 * (TEMP + 1500) * (TEMP + 1500) / 2.0;
 		}
 
 		TEMP -= T2;
@@ -100,7 +100,7 @@ void _calculate(uint32_t dataWithPressTemp[], uint32_t bufer[]) {
 		SENS -= SENS2;
 	}
 
-	float PRES = (D1 * SENS / (2 << 20) - OFF) / (2 << 14);
+	float PRES = (D1 * SENS / (2097152.0) - OFF) / 32768.0;
 
 	bufer[0] = PRES;
 	bufer[1] = TEMP;

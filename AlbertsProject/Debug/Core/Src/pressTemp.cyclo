@@ -1,7 +1,7 @@
 ../Core/Src/pressTemp.c:36:6:MS_Init	1
 ../Core/Src/pressTemp.c:49:6:MS_ReadData	1
 ../Core/Src/pressTemp.c:57:6:_msReadAdc	1
-../Core/Src/pressTemp.c:61:6:_msReadProm	2
+../Core/Src/pressTemp.c:61:6:_msReadProm	1
 ../Core/Src/pressTemp.c:77:6:_calculate	3
 ../Core/Src/pressTemp.c:109:6:_msSendCmd	1
 ../Core/Src/pressTemp.c:115:6:_msSendCmdGetData16	1
