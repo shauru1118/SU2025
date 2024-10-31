@@ -30,9 +30,7 @@ uint8_t LSM_Init(SPI_HandleTypeDef *hspi, GPIO_TypeDef *port, uint16_t pin) {
 
 void LSM_ReadData(int16_t endBufer[]) {
 	uint8_t bufer[6];
-	for (int i = 0; i < 6; i++) {
-		bufer[i] = 0;
-	}
+
 	uint8_t dataReg = LSM_REG_OUTX_L_XL;
 
 	for (int i = 0; i < 6; i++) {

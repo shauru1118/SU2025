@@ -102,6 +102,14 @@
 #define LSM_SET_GYRO_MODE 0b011
 #define LSM_SET_CTRL3_C 0b01000100
 
+#define LSM_SET_CTRL1_XL_12_5_Hz 0b00010100
+#define LSM_SET_CTRL1_XL_26_Hz 0b00100100
+#define LSM_SET_CTRL1_XL_52_Hz 0b00110100
+#define LSM_SET_CTRL2_G_12_5_Hz 0b00011100
+#define LSM_SET_CTRL2_G_26_Hz 0b00101100
+#define LSM_SET_CTRL2_G_52_Hz 0b00111100
+
+
 
 
 uint8_t LSM_Init(SPI_HandleTypeDef *hspi, GPIO_TypeDef *port, uint16_t pin);
