@@ -109,8 +109,12 @@ int main(void) {
 	HAL_GPIO_TogglePin(LED_RX_GPIO_Port, LED_RX_Pin);
 	HAL_GPIO_TogglePin(LED_TX_GPIO_Port, LED_TX_Pin);
 
-	while (!hUsbDeviceFS.ep_in[CDC_IN_EP & 0xFU].is_used)
-		;
+	while (!hUsbDeviceFS.ep_in[CDC_IN_EP & 0xFU].is_used) {
+		LED_ERR_GPIO_Port->ODR |= LED_ERR_Pin;
+		HAL_Delay(100);
+		LED_ERR_GPIO_Port->ODR &= ~LED_ERR_Pin;
+		HAL_Delay(100);
+	}
 
 	hCDC = (USBD_CDC_HandleTypeDef*) hUsbDeviceFS.pClassData;
 

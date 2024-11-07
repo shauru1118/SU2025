@@ -116,7 +116,12 @@ uint8_t LORA_ReceiveData(uint8_t *data) {
 	return 0;
 }
 
-void LORA_TransmitData(uint8_t *data, uint8_t size) {
+void LORA_TransmitData(char *data, uint8_t size) {
+	uint8_t dataToLora[size];
+
+	for (int i = 0; i < size; i++) {
+		dataToLora[i] = (uint8_t) data[i];
+	}
 
 	_loraWriteReg(LORA_REG_FIFO_ADDR_PTR, LORA_SET_FIFO_TX_BASE_ADDR);
 	_loraWriteReg(LORA_REG_PAYLOAD, size);
@@ -124,11 +129,12 @@ void LORA_TransmitData(uint8_t *data, uint8_t size) {
 	uint8_t regFifo = LORA_REG_FIFO | (1 << 7);
 	_nssPort->ODR &= ~_nssPin; // nss 0
 	HAL_SPI_Transmit(_hspi, &regFifo, 1, 1000);
-	HAL_SPI_Transmit(_hspi, data, size, 1000);
+	HAL_SPI_Transmit(_hspi, dataToLora, size, 1000);
 	_nssPort->ODR |= _nssPin; // nss 1
 
 	_loraWriteReg(LORA_REG_OP_MODE, LORA_MODE_TX);
-	while(!(_loraReadReg(LORA_REG_FLAGS) & LORA_FLAGS_TX_DONE));
+	while (!(_loraReadReg(LORA_REG_FLAGS) & LORA_FLAGS_TX_DONE))
+		;
 	_loraWriteReg(LORA_REG_FLAGS, LORA_FLAGS_TX_DONE);
 
 	_loraWriteReg(LORA_REG_OP_MODE, LORA_MODE_RX_CONT);

@@ -64,5 +64,5 @@ uint8_t LORA_Init(SPI_HandleTypeDef *hspi, GPIO_TypeDef *NSS_PORT,
 		uint16_t NSS_PIN);
 
 uint8_t LORA_ReceiveData(uint8_t *data);
-void LORA_TransmitData(uint8_t *data, uint8_t size);
+void LORA_TransmitData(char *data, uint8_t size);
 

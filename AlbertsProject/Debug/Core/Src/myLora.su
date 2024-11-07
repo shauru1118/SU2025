@@ -2,4 +2,4 @@
 ../Core/Src/myLora.c:68:9:_loraReadReg	16	static
 ../Core/Src/myLora.c:76:6:_loraWriteReg	16	static
 ../Core/Src/myLora.c:84:9:LORA_ReceiveData	24	static
-../Core/Src/myLora.c:119:6:LORA_TransmitData	24	static
+../Core/Src/myLora.c:119:6:LORA_TransmitData	56	dynamic

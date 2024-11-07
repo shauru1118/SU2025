@@ -2561,3 +2561,331 @@ Command-line arguments:  -os win32 -ws win32 -arch x86_64
 
 !ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-10-30 17:41:11.971
 !MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/openstlinux/updatesite1.
+!SESSION 2024-10-31 21:09:52.005 -----------------------------------------------
+eclipse.buildId=Version 1.16.0
+java.version=17.0.11
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY org.eclipse.e4.ui.workbench 4 0 2024-10-31 21:10:10.937
+!MESSAGE Unable to retrieve the bundle from the URI: bundleclass://com.genuitec.eclipse.meexplorer/com.genuitec.eclipse.meexplorer.breadcrumb.e4.BreadCrumbContainer
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-10-31 21:10:11.680
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-10-31 21:10:11.681
+!MESSAGE Log4j2 initialized with config file D:\GitHub\SU2025\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-10-31 21:10:19.566
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-10-31 21:10:49.621
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/updatesite1.
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-10-31 21:10:54.206
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/openstlinux/updatesite1.
+!SESSION 2024-11-01 16:20:08.619 -----------------------------------------------
+eclipse.buildId=Version 1.16.0
+java.version=17.0.11
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY org.eclipse.e4.ui.workbench 4 0 2024-11-01 16:20:28.552
+!MESSAGE Unable to retrieve the bundle from the URI: bundleclass://com.genuitec.eclipse.meexplorer/com.genuitec.eclipse.meexplorer.breadcrumb.e4.BreadCrumbContainer
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-11-01 16:20:29.908
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-11-01 16:20:29.926
+!MESSAGE Log4j2 initialized with config file D:\GitHub\SU2025\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-11-01 16:20:40.379
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-11-01 16:21:14.799
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/updatesite1.
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-11-01 16:21:21.262
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/openstlinux/updatesite1.
+!SESSION 2024-11-02 21:45:51.295 -----------------------------------------------
+eclipse.buildId=Version 1.16.0
+java.version=17.0.11
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY org.eclipse.e4.ui.workbench 4 0 2024-11-02 21:46:08.544
+!MESSAGE Unable to retrieve the bundle from the URI: bundleclass://com.genuitec.eclipse.meexplorer/com.genuitec.eclipse.meexplorer.breadcrumb.e4.BreadCrumbContainer
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-11-02 21:46:09.246
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-11-02 21:46:09.255
+!MESSAGE Log4j2 initialized with config file D:\GitHub\SU2025\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-11-02 21:46:21.821
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.equinox.p2.operations 4 10052 2024-11-02 21:52:33.329
+!MESSAGE Cannot continue the operation.  There is another install operation in progress.
+
+!ENTRY org.eclipse.equinox.p2.operations 4 10052 2024-11-02 21:52:33.330
+!MESSAGE Cannot continue the operation.  There is another install operation in progress.
+
+!ENTRY org.eclipse.equinox.p2.operations 4 10052 2024-11-02 21:52:35.625
+!MESSAGE Cannot continue the operation.  There is another install operation in progress.
+
+!ENTRY org.eclipse.equinox.p2.operations 4 10052 2024-11-02 21:52:35.626
+!MESSAGE Cannot continue the operation.  There is another install operation in progress.
+
+!ENTRY org.eclipse.equinox.p2.touchpoint.natives 2 0 2024-11-02 21:59:20.483
+!MESSAGE Could not remove temporary backup directory (it is safe to manually delete it and its contents): C:\Users\sargs\AppData\Local\Temp\STM32CubeIDE_235095ae-5acb-4317-8c90-71bb6effa1f6
+
+!ENTRY org.eclipse.core.jobs 4 2 2024-11-02 21:59:21.472
+!MESSAGE An internal error occurred during: "Computing size".
+!STACK 0
+java.lang.IllegalStateException: Profile STM32CubeIDE is not current. Expected timestamp 1730573960320 but was 1725168047801.
+	at org.eclipse.equinox.internal.p2.engine.SimpleProfileRegistry.lockProfile(SimpleProfileRegistry.java:870)
+	at org.eclipse.equinox.internal.p2.engine.Engine.perform(Engine.java:73)
+	at org.eclipse.equinox.internal.p2.engine.Engine.perform(Engine.java:49)
+	at org.eclipse.equinox.internal.p2.ui.ProvUI.getSize(ProvUI.java:266)
+	at org.eclipse.equinox.internal.p2.ui.dialogs.SizeComputingWizardPage$1.run(SizeComputingWizardPage.java:67)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+!SESSION 2024-11-02 22:00:03.881 -----------------------------------------------
+eclipse.buildId=Version 1.16.0
+java.version=17.0.11
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -data file:/D:/GitHub/SU2025/
+
+!ENTRY org.eclipse.e4.ui.workbench 4 0 2024-11-02 22:00:11.750
+!MESSAGE Unable to retrieve the bundle from the URI: bundleclass://com.genuitec.eclipse.meexplorer/com.genuitec.eclipse.meexplorer.breadcrumb.e4.BreadCrumbContainer
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-11-02 22:00:12.237
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-11-02 22:00:12.239
+!MESSAGE Log4j2 initialized with config file D:\GitHub\SU2025\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-11-02 22:00:18.166
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2024-11-03 19:56:20.903
+!MESSAGE Error - No active DSF-Session. tmpSessionId = 14 (contextManager row 121)
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2024-11-03 19:56:20.905
+!MESSAGE Existing sessions are:
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2024-11-03 19:56:20.905
+!MESSAGE Error - No active DSF-Session. tmpSessionId = 14 (contextManager row 121)
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2024-11-03 19:56:20.906
+!MESSAGE Existing sessions are:
+!SESSION 2024-11-03 21:24:05.420 -----------------------------------------------
+eclipse.buildId=Version 1.16.1
+java.version=17.0.11
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY org.eclipse.e4.ui.workbench 4 0 2024-11-03 21:24:28.076
+!MESSAGE Unable to retrieve the bundle from the URI: bundleclass://com.genuitec.eclipse.meexplorer/com.genuitec.eclipse.meexplorer.breadcrumb.e4.BreadCrumbContainer
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-11-03 21:24:28.777
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-11-03 21:24:28.783
+!MESSAGE Log4j2 initialized with config file D:\GitHub\SU2025\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-11-03 21:24:37.291
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-11-03 21:25:06.828
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/openstlinux/updatesite1.
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-11-03 21:25:06.961
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/updatesite1.
+
+!ENTRY org.eclipse.cdt.dsf.gdb 4 5012 2024-11-03 21:30:15.684
+!MESSAGE Error in final launch sequence:
+
+Failed to execute MI command:
+target remote localhost:61234
+
+Error message from debugger back end:
+Remote communication error.  Target disconnected.: (undocumented errno 10061).
+!STACK 1
+org.eclipse.core.runtime.CoreException: Failed to execute MI command:
+target remote localhost:61234
+
+Error message from debugger back end:
+Remote communication error.  Target disconnected.: (undocumented errno 10061).
+	at org.eclipse.cdt.dsf.concurrent.Query.get(Query.java:112)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugSession(GdbLaunchDelegate.java:252)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launchDebugger(GdbLaunchDelegate.java:109)
+	at org.eclipse.cdt.dsf.gdb.launching.GdbLaunchDelegate.launch(GdbLaunchDelegate.java:97)
+	at com.st.stm32cube.ide.mcu.debug.launch.DSFDelegate.launch(DSFDelegate.java:334)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:805)
+	at org.eclipse.debug.internal.core.LaunchConfiguration.launch(LaunchConfiguration.java:716)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin.buildAndLaunch(DebugUIPlugin.java:1040)
+	at org.eclipse.debug.internal.ui.DebugUIPlugin$1.run(DebugUIPlugin.java:1243)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: java.lang.Exception: Remote communication error.  Target disconnected.: (undocumented errno 10061).
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1024)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:853)
+!SUBENTRY 1 org.eclipse.cdt.dsf.gdb 4 10004 2024-11-03 21:30:15.684
+!MESSAGE Failed to execute MI command:
+target remote localhost:61234
+
+Error message from debugger back end:
+Remote communication error.  Target disconnected.: (undocumented errno 10061).
+!STACK 0
+java.lang.Exception: Remote communication error.  Target disconnected.: (undocumented errno 10061).
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.processMIOutput(AbstractMIControl.java:1024)
+	at org.eclipse.cdt.dsf.mi.service.command.AbstractMIControl$RxThread.run(AbstractMIControl.java:853)
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2024-11-03 21:45:11.866
+!MESSAGE Error - No active DSF-Session. tmpSessionId = 9 (contextManager row 121)
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2024-11-03 21:45:11.866
+!MESSAGE Existing sessions are:
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2024-11-03 21:45:11.866
+!MESSAGE Error - No active DSF-Session. tmpSessionId = 9 (contextManager row 121)
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2024-11-03 21:45:11.869
+!MESSAGE Existing sessions are:
+!SESSION 2024-11-03 21:49:22.958 -----------------------------------------------
+eclipse.buildId=Version 1.16.1
+java.version=17.0.11
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY org.eclipse.e4.ui.workbench 4 0 2024-11-03 21:49:26.094
+!MESSAGE Unable to retrieve the bundle from the URI: bundleclass://com.genuitec.eclipse.meexplorer/com.genuitec.eclipse.meexplorer.breadcrumb.e4.BreadCrumbContainer
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-11-03 21:49:26.498
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-11-03 21:49:26.499
+!MESSAGE Log4j2 initialized with config file D:\GitHub\SU2025\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-11-03 21:49:30.674
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-11-03 21:49:56.033
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/openstlinux/updatesite1.
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-11-03 21:49:56.138
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/updatesite1.
+!SESSION 2024-11-04 20:18:38.119 -----------------------------------------------
+eclipse.buildId=Version 1.16.1
+java.version=17.0.11
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY org.eclipse.e4.ui.workbench 4 0 2024-11-04 20:19:02.618
+!MESSAGE Unable to retrieve the bundle from the URI: bundleclass://com.genuitec.eclipse.meexplorer/com.genuitec.eclipse.meexplorer.breadcrumb.e4.BreadCrumbContainer
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-11-04 20:19:03.434
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-11-04 20:19:03.440
+!MESSAGE Log4j2 initialized with config file D:\GitHub\SU2025\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-11-04 20:19:16.070
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-11-04 20:19:45.948
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/openstlinux/updatesite1.
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-11-04 20:19:46.108
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/updatesite1.
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2024-11-04 21:13:11.817
+!MESSAGE Error - No active DSF-Session. tmpSessionId = 7 (contextManager row 121)
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2024-11-04 21:13:11.817
+!MESSAGE Existing sessions are:
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2024-11-04 21:13:11.818
+!MESSAGE Error - No active DSF-Session. tmpSessionId = 7 (contextManager row 121)
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2024-11-04 21:13:11.818
+!MESSAGE Existing sessions are:
+!SESSION 2024-11-04 21:48:54.006 -----------------------------------------------
+eclipse.buildId=Version 1.16.1
+java.version=17.0.11
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY org.eclipse.e4.ui.workbench 4 0 2024-11-04 21:48:59.159
+!MESSAGE Unable to retrieve the bundle from the URI: bundleclass://com.genuitec.eclipse.meexplorer/com.genuitec.eclipse.meexplorer.breadcrumb.e4.BreadCrumbContainer
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-11-04 21:48:59.857
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-11-04 21:48:59.858
+!MESSAGE Log4j2 initialized with config file D:\GitHub\SU2025\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-11-04 21:49:07.664
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-11-04 21:49:35.412
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/openstlinux/updatesite1.
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-11-04 21:49:35.630
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/updatesite1.
+!SESSION 2024-11-05 12:50:25.103 -----------------------------------------------
+eclipse.buildId=Version 1.16.1
+java.version=17.0.11
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY org.eclipse.e4.ui.workbench 4 0 2024-11-05 12:50:43.674
+!MESSAGE Unable to retrieve the bundle from the URI: bundleclass://com.genuitec.eclipse.meexplorer/com.genuitec.eclipse.meexplorer.breadcrumb.e4.BreadCrumbContainer
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-11-05 12:50:44.250
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-11-05 12:50:44.264
+!MESSAGE Log4j2 initialized with config file D:\GitHub\SU2025\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-11-05 12:50:57.170
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-11-05 12:51:28.399
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/openstlinux/updatesite1.
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-11-05 12:51:29.072
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/updatesite1.
+!SESSION 2024-11-05 13:15:46.381 -----------------------------------------------
+eclipse.buildId=Version 1.16.1
+java.version=17.0.11
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=ru_RU
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY org.eclipse.e4.ui.workbench 4 0 2024-11-05 13:15:51.419
+!MESSAGE Unable to retrieve the bundle from the URI: bundleclass://com.genuitec.eclipse.meexplorer/com.genuitec.eclipse.meexplorer.breadcrumb.e4.BreadCrumbContainer
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2024-11-05 13:15:51.970
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2024-11-05 13:15:51.971
+!MESSAGE Log4j2 initialized with config file D:\GitHub\SU2025\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2024-11-05 13:15:59.583
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-11-05 13:16:27.155
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/openstlinux/updatesite1.
+
+!ENTRY org.eclipse.equinox.p2.metadata.repository 4 1000 2024-11-05 13:16:27.778
+!MESSAGE No repository found at https://sw-center.st.com/stm32cubeide/updatesite1.

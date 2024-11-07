@@ -18,14 +18,12 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "fatfs.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
 
-#include "pressTemp.h"
-#include "myLoRa.h"
-#include "accelGyro.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -44,6 +42,8 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+SD_HandleTypeDef hsd;
+
 SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
@@ -52,17 +52,16 @@ int16_t LSM_Data[3];
 int sizeOfBufferToLora = 100;
 
 struct {
-	char teamID[2];
 	uint32_t time;
-	uint32_t alt;
-	uint32_t press;
-	uint32_t temp;
-	uint32_t accel1;
-	uint32_t accel2;
-	uint32_t accel3;
-	uint32_t gyro1;
-	uint32_t gyro2;
-	uint32_t gyro3;
+	int32_t alt;
+	int32_t press;
+	int32_t temp;
+	int32_t accel1;
+	int32_t accel2;
+	int32_t accel3;
+	int32_t gyro1;
+	int32_t gyro2;
+	int32_t gyro3;
 	char flagStart;
 	char flagApag;
 	char flagResSys;
@@ -70,13 +69,24 @@ struct {
 
 } SensorsData;
 
+FATFS FatFs;
+FIL Fil;
+FRESULT FR_Status;
+FATFS *FS_Ptr;
+UINT RWC, WWC; // Read/Write Word Counter
+DWORD FreeClusters;
+FILINFO FileInfo;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
+static void MX_SDIO_SD_Init(void);
 /* USER CODE BEGIN PFP */
+void cheakAll(void);
+void readData(void);
+void writeData(void);
 
 /* USER CODE END PFP */
 
@@ -114,66 +124,33 @@ int main(void) {
 	/* Initialize all configured peripherals */
 	MX_GPIO_Init();
 	MX_SPI1_Init();
+	MX_SDIO_SD_Init();
+	MX_FATFS_Init();
 	/* USER CODE BEGIN 2 */
 
-	LED2_GPIO_Port->ODR |= LED2_Pin;
-	LED3_GPIO_Port->ODR |= LED3_Pin;
-	LED4_GPIO_Port->ODR |= LED4_Pin;
-
-	HAL_Delay(2000);
-
-	LED2_GPIO_Port->ODR &= ~LED2_Pin;
-	LED3_GPIO_Port->ODR &= ~LED3_Pin;
-	LED4_GPIO_Port->ODR &= ~LED4_Pin;
-
-	if (LORA_Init(&hspi1, LORA_NSS_GPIO_Port, LORA_NSS_Pin)) {
-		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-	}
-
-	MS_Init(&hspi1, MS_NSS_GPIO_Port, MS_NSS_Pin);
-
-	if (LSM_Init(&hspi1, LSM_NSS_GPIO_Port, LSM_NSS_Pin)) {
-		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-		HAL_Delay(3000);
-		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-	}
-
+	cheakAll();
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	while (1) {
-		MS_ReadData(MS_Data);
-		LSM_ReadData(LSM_Data);
 
-		SensorsData.time = HAL_GetTick();
-		SensorsData.press = MS_Data[0];
-		SensorsData.temp = MS_Data[1];
-		SensorsData.accel1 = LSM_Data[0];
-		SensorsData.accel2 = LSM_Data[1];
-		SensorsData.accel3 = LSM_Data[2];
+		readData();
 
-		char buffer[sizeOfBufferToLora];
+		writeData();
 
-		uint8_t sizeOfSnprintf = snprintf(buffer, sizeOfBufferToLora,
-				"%s;%ld;1;%ld;%ld;%ld;%ld;%ld;1;1\n", SensorsData.teamID,
-				SensorsData.time, SensorsData.press, SensorsData.temp,
-				SensorsData.accel1, SensorsData.accel2, SensorsData.accel3);
-
-		uint8_t bufferToLora[sizeOfSnprintf];
-		bufferToLora[0] = sizeOfSnprintf;
-
-		for (int i = 0; i < sizeOfSnprintf; i++) {
-			bufferToLora[i] = (uint8_t) buffer[i];
-		}
-
-		LORA_TransmitData(bufferToLora, sizeOfSnprintf);
-
+//		LORA_TransmitData(buffer, sizeOfSnprintf);
+//
+//		f_open(&Fil, "SULOG.txt", FA_OPEN_ALWAYS | FA_WRITE);
+//
+//		f_lseek(&Fil, f_size(&Fil));
+//		f_puts(buffer, &Fil);
+//
+//		f_close(&Fil);
+//
 		HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
 
-		HAL_Delay(100);
+//		HAL_Delay(100);
 
 		/* USER CODE END WHILE */
 
@@ -225,6 +202,33 @@ void SystemClock_Config(void) {
 }
 
 /**
+ * @brief SDIO Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_SDIO_SD_Init(void) {
+
+	/* USER CODE BEGIN SDIO_Init 0 */
+
+	/* USER CODE END SDIO_Init 0 */
+
+	/* USER CODE BEGIN SDIO_Init 1 */
+
+	/* USER CODE END SDIO_Init 1 */
+	hsd.Instance = SDIO;
+	hsd.Init.ClockEdge = SDIO_CLOCK_EDGE_RISING;
+	hsd.Init.ClockBypass = SDIO_CLOCK_BYPASS_DISABLE;
+	hsd.Init.ClockPowerSave = SDIO_CLOCK_POWER_SAVE_DISABLE;
+	hsd.Init.BusWide = SDIO_BUS_WIDE_1B;
+	hsd.Init.HardwareFlowControl = SDIO_HARDWARE_FLOW_CONTROL_DISABLE;
+	hsd.Init.ClockDiv = 0;
+	/* USER CODE BEGIN SDIO_Init 2 */
+
+	/* USER CODE END SDIO_Init 2 */
+
+}
+
+/**
  * @brief SPI1 Initialization Function
  * @param None
  * @retval None
@@ -246,7 +250,7 @@ static void MX_SPI1_Init(void) {
 	hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
 	hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
 	hspi1.Init.NSS = SPI_NSS_SOFT;
-	hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_8;
+	hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
 	hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
 	hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
 	hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -275,6 +279,7 @@ static void MX_GPIO_Init(void) {
 	__HAL_RCC_GPIOH_CLK_ENABLE();
 	__HAL_RCC_GPIOA_CLK_ENABLE();
 	__HAL_RCC_GPIOB_CLK_ENABLE();
+	__HAL_RCC_GPIOD_CLK_ENABLE();
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOC, PWR2_EN_Pin | WQ_NSS_Pin | LORA_NSS_Pin,
@@ -322,6 +327,96 @@ static void MX_GPIO_Init(void) {
 }
 
 /* USER CODE BEGIN 4 */
+void readData() {
+	MS_ReadData(MS_Data);
+	LSM_ReadData(LSM_Data);
+
+	SensorsData.time = HAL_GetTick();
+	SensorsData.press = MS_Data[0];
+	SensorsData.temp = MS_Data[1];
+	SensorsData.accel1 = LSM_Data[3];
+	SensorsData.accel2 = LSM_Data[4];
+	SensorsData.accel3 = LSM_Data[5];
+	SensorsData.gyro1 = LSM_Data[0];
+	SensorsData.gyro2 = LSM_Data[1];
+	SensorsData.gyro3 = LSM_Data[2];
+}
+
+void writeData() {
+
+	char buffer[sizeOfBufferToLora];
+
+//	uint8_t sizeOfSnprintf =
+	snprintf(buffer, sizeOfBufferToLora,
+			"%s;%ld;%ld;%ld;%ld;%ld;%ld;%ld;%ld;%ld;%ld;1;1;1;1;\n", "SU",
+			SensorsData.time, SensorsData.alt, SensorsData.press,
+			SensorsData.temp, SensorsData.accel1, SensorsData.accel2,
+			SensorsData.accel3, SensorsData.gyro1, SensorsData.gyro2,
+			SensorsData.gyro3);
+//	LORA_TransmitData(buffer, sizeOfSnprintf);
+
+	f_open(&Fil, "SULOG.txt", FA_OPEN_ALWAYS | FA_WRITE);
+
+	f_lseek(&Fil, f_size(&Fil));
+	HAL_Delay(1);
+	f_puts(buffer, &Fil);
+	HAL_Delay(15);
+	f_close(&Fil);
+
+}
+
+void cheakAll() {
+	LED2_GPIO_Port->ODR |= LED2_Pin;
+	LED3_GPIO_Port->ODR |= LED3_Pin;
+	LED4_GPIO_Port->ODR |= LED4_Pin;
+
+	HAL_Delay(1000);
+
+	LED2_GPIO_Port->ODR &= ~LED2_Pin;
+	LED3_GPIO_Port->ODR &= ~LED3_Pin;
+	LED4_GPIO_Port->ODR &= ~LED4_Pin;
+
+	if (LORA_Init(&hspi1, LORA_NSS_GPIO_Port, LORA_NSS_Pin)) {
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+		HAL_Delay(1000);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+	}
+
+	MS_Init(&hspi1, MS_NSS_GPIO_Port, MS_NSS_Pin);
+
+	if (LSM_Init(&hspi1, LSM_NSS_GPIO_Port, LSM_NSS_Pin)) {
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+		HAL_Delay(300);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+		HAL_Delay(300);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+		HAL_Delay(300);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+	}
+
+	FR_Status = f_mount(&FatFs, SDPath, 1);
+
+	if (FR_Status != FR_OK) {
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+		HAL_Delay(300);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+		HAL_Delay(300);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+		HAL_Delay(300);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+		HAL_Delay(300);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+		HAL_Delay(300);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+
+	}
+
+	f_unlink("SULOG.txt");
+
+	f_open(&Fil, "SULOG.txt", FA_CREATE_ALWAYS);
+	//	f_puts("BEFOR WHILE", &Fil);
+	f_close(&Fil);
+}
 
 /* USER CODE END 4 */
 

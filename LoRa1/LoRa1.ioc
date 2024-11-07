@@ -181,3 +181,4 @@ VP_USB_DEVICE_VS_USB_DEVICE_CDC_FS.Signal=USB_DEVICE_VS_USB_DEVICE_CDC_FS
 board=custom
 isbadioc=false
 isbadioc=false
+isbadioc=false

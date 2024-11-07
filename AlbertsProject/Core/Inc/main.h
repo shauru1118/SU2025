@@ -32,6 +32,11 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+
+#include "pressTemp.h"
+#include "myLoRa.h"
+#include "accelGyro.h"
+#include "SD.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

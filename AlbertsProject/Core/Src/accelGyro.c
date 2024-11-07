@@ -25,20 +25,29 @@ uint8_t LSM_Init(SPI_HandleTypeDef *hspi, GPIO_TypeDef *port, uint16_t pin) {
 		return 1;
 	}
 
+	uint8_t xlmode = LSM_SET_CTRL1_XL_26_Hz;
+	uint8_t gmode = LSM_SET_CTRL2_G_26_Hz;
+	_lsmWriteReg(LSM_REG_CTRL1_XL, xlmode);
+	_lsmWriteReg(LSM_REG_CTRL2_G, gmode);
+
 	return 0;
 }
 
 void LSM_ReadData(int16_t endBufer[]) {
-	uint8_t bufer[6];
+	uint8_t buffer[12];
 
-	uint8_t dataReg = LSM_REG_OUTX_L_XL;
+	uint8_t dataReg = LSM_REG_OUTX_L_G;
 
-	for (int i = 0; i < 6; i++) {
-		bufer[i] = _lsmReadReg(dataReg+i);
+	for (int i = 0; i < 12; i++) {
+		buffer[i] = _lsmReadReg(dataReg+i);
 	}
-	for (int i=0; i<3; i++) {
-		endBufer[i] = (((int16_t)bufer[2*i+1]) << 8) + bufer[2*i];
-	}
+
+	endBufer[0] = (((uint16_t)buffer[1]) << 8) + buffer[0];
+	endBufer[1] = (((uint16_t)buffer[3]) << 8) + buffer[2];
+	endBufer[2] = (((uint16_t)buffer[5]) << 8) + buffer[4];
+	endBufer[3] = (((uint16_t)buffer[7]) << 8) + buffer[6];
+	endBufer[4] = (((uint16_t)buffer[9]) << 8) + buffer[8];
+	endBufer[5] = (((uint16_t)buffer[11]) << 8) + buffer[10];
 }
 
 uint8_t _lsmReadReg(uint8_t reg) {

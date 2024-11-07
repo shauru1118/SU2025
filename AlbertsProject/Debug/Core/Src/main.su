@@ -1,5 +1,9 @@
-../Core/Src/main.c:92:5:main	104	dynamic
-../Core/Src/main.c:189:6:SystemClock_Config	88	static
-../Core/Src/main.c:232:13:MX_SPI1_Init	8	static
-../Core/Src/main.c:268:13:MX_GPIO_Init	48	static
-../Core/Src/main.c:332:6:Error_Handler	4	static,ignoring_inline_asm
+../Core/Src/main.c:102:5:main	8	static
+../Core/Src/main.c:166:6:SystemClock_Config	88	static
+../Core/Src/main.c:209:13:MX_SDIO_SD_Init	4	static
+../Core/Src/main.c:236:13:MX_SPI1_Init	8	static
+../Core/Src/main.c:272:13:MX_GPIO_Init	48	static
+../Core/Src/main.c:330:6:readData	8	static
+../Core/Src/main.c:345:6:writeData	88	dynamic
+../Core/Src/main.c:368:6:cheakAll	8	static
+../Core/Src/main.c:427:6:Error_Handler	4	static,ignoring_inline_asm
