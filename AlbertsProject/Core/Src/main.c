@@ -48,9 +48,9 @@ SPI_HandleTypeDef hspi1;
 
 /* USER CODE BEGIN PV */
 uint32_t MS_Data[2];
-int16_t LSM_Data[3];
+int16_t LSM_Data[6];
 int sizeOfBufferToLora = 100;
-
+int32_t seaLvlPress;
 struct {
 	uint32_t time;
 	int32_t alt;
@@ -85,6 +85,7 @@ static void MX_SPI1_Init(void);
 static void MX_SDIO_SD_Init(void);
 /* USER CODE BEGIN PFP */
 void cheakAll(void);
+void getSeaLvlPress(void);
 void readData(void);
 void writeData(void);
 
@@ -129,6 +130,7 @@ int main(void) {
 	/* USER CODE BEGIN 2 */
 
 	cheakAll();
+	getSeaLvlPress();
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -139,18 +141,7 @@ int main(void) {
 
 		writeData();
 
-//		LORA_TransmitData(buffer, sizeOfSnprintf);
-//
-//		f_open(&Fil, "SULOG.txt", FA_OPEN_ALWAYS | FA_WRITE);
-//
-//		f_lseek(&Fil, f_size(&Fil));
-//		f_puts(buffer, &Fil);
-//
-//		f_close(&Fil);
-//
 		HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-
-//		HAL_Delay(100);
 
 		/* USER CODE END WHILE */
 
@@ -333,6 +324,8 @@ void readData() {
 
 	SensorsData.time = HAL_GetTick();
 	SensorsData.press = MS_Data[0];
+	SensorsData.alt = (int32_t) ((SensorsData.press - seaLvlPress)
+			/ 133.32239023154 * 10.5 * 100);
 	SensorsData.temp = MS_Data[1];
 	SensorsData.accel1 = LSM_Data[3];
 	SensorsData.accel2 = LSM_Data[4];
@@ -355,7 +348,7 @@ void writeData() {
 			SensorsData.gyro3);
 //	LORA_TransmitData(buffer, sizeOfSnprintf);
 
-	f_open(&Fil, "SULOG.txt", FA_OPEN_ALWAYS | FA_WRITE);
+	f_open(&Fil, "SULOG.csv", FA_OPEN_ALWAYS | FA_WRITE);
 
 	f_lseek(&Fil, f_size(&Fil));
 	HAL_Delay(1);
@@ -370,7 +363,7 @@ void cheakAll() {
 	LED3_GPIO_Port->ODR |= LED3_Pin;
 	LED4_GPIO_Port->ODR |= LED4_Pin;
 
-	HAL_Delay(1000);
+	HAL_Delay(500);
 
 	LED2_GPIO_Port->ODR &= ~LED2_Pin;
 	LED3_GPIO_Port->ODR &= ~LED3_Pin;
@@ -411,11 +404,16 @@ void cheakAll() {
 
 	}
 
-	f_unlink("SULOG.txt");
+	f_unlink("SULOG.csv");
 
-	f_open(&Fil, "SULOG.txt", FA_CREATE_ALWAYS);
-	//	f_puts("BEFOR WHILE", &Fil);
+	f_open(&Fil, "SULOG.csv", FA_CREATE_ALWAYS | FA_WRITE);
+	f_puts("BEFOR WHILE \n", &Fil);
 	f_close(&Fil);
+}
+
+void getSeaLvlPress() {
+	MS_ReadData(MS_Data);
+	seaLvlPress = MS_Data[0];
 }
 
 /* USER CODE END 4 */
