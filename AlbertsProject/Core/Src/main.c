@@ -73,7 +73,7 @@ FATFS FatFs;
 FIL Fil;
 FRESULT FR_Status;
 FATFS *FS_Ptr;
-UINT RWC, WWC; // Read/Write Word Counter
+UINT RWC, WWC;
 DWORD FreeClusters;
 FILINFO FileInfo;
 /* USER CODE END PV */
