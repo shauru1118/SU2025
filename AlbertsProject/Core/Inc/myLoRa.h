@@ -65,4 +65,5 @@ uint8_t LORA_Init(SPI_HandleTypeDef *hspi, GPIO_TypeDef *NSS_PORT,
 
 uint8_t LORA_ReceiveData(uint8_t *data);
 void LORA_TransmitData(char *data, uint8_t size);
+uint16_t LORA_ChangeFreq(uint32_t freq);
 

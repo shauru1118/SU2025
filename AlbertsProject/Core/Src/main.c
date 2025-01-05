@@ -51,6 +51,7 @@ uint32_t MS_Data[2];
 int16_t LSM_Data[6];
 int sizeOfBufferToLora = 100;
 int32_t seaLvlPress;
+uint16_t roverFreq = 434; // !!!!!!!!---- YZNAT' CHASTOTY ----!!!!!!!!
 struct {
 	uint32_t time;
 	int32_t alt;
@@ -88,6 +89,7 @@ void cheakAll(void);
 void getSeaLvlPress(void);
 void readData(void);
 void writeData(void);
+void recieveTransmitData(void);
 
 /* USER CODE END PFP */
 
@@ -140,6 +142,8 @@ int main(void) {
 		readData();
 
 		writeData();
+
+		recieveTransmitData();
 
 		HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
 
@@ -318,6 +322,17 @@ static void MX_GPIO_Init(void) {
 }
 
 /* USER CODE BEGIN 4 */
+
+void writeSD(char *str) {
+	f_open(&Fil, "SULOG.csv", FA_OPEN_ALWAYS | FA_WRITE);
+
+	f_lseek(&Fil, f_size(&Fil));
+	HAL_Delay(1);
+	f_puts(str, &Fil);
+	HAL_Delay(15);
+	f_close(&Fil);
+}
+
 void readData() {
 	MS_ReadData(MS_Data);
 	LSM_ReadData(LSM_Data);
@@ -355,6 +370,22 @@ void writeData() {
 	f_puts(buffer, &Fil);
 	HAL_Delay(15);
 	f_close(&Fil);
+
+}
+
+void recieveTransmitData() {
+	uint8_t recieveData[10];
+	uint32_t size = LORA_ReceiveData(recieveData);
+	if (size) {
+		char transmitData[10];
+		for (int i = 0; i < 10; i++) {
+			transmitData[i] = (char) recieveData[i];
+		}
+		LORA_ChangeFreq(roverFreq);
+		LORA_TransmitData(transmitData, 10);
+		LORA_ChangeFreq(433);
+	}
+	writeSD("transmit to rover\n");
 
 }
 

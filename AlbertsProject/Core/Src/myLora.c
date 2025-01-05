@@ -11,6 +11,8 @@ SPI_HandleTypeDef *_hspi;
 GPIO_TypeDef *_nssPort;
 uint16_t _nssPin;
 
+uint32_t curFreq = 433;
+
 uint8_t _loraReadReg(uint8_t reg);
 void _loraWriteReg(uint8_t reg, uint8_t data);
 
@@ -29,7 +31,7 @@ uint8_t LORA_Init(SPI_HandleTypeDef *hspi, GPIO_TypeDef *NSS_PORT,
 	_loraWriteReg(LORA_REG_OP_MODE,
 			(LORA_SET_LoRa << 7) | (LORA_SET_LOW_FREQ << 3));
 
-	uint32_t _lora_Frf = (LORA_SET_FREQ << 19) / 32;
+	uint32_t _lora_Frf = (curFreq << 19) / 32;
 
 	_loraWriteReg(LORA_REG_FR, _lora_Frf >> 16);
 	_loraWriteReg(LORA_REG_FR + 1, _lora_Frf >> 8);
@@ -139,4 +141,15 @@ void LORA_TransmitData(char *data, uint8_t size) {
 
 	_loraWriteReg(LORA_REG_OP_MODE, LORA_MODE_RX_CONT);
 
+}
+
+uint16_t LORA_ChangeFreq(uint32_t freq) {
+	curFreq = freq;
+	uint32_t _lora_Frf = (curFreq << 19) / 32;
+
+	_loraWriteReg(LORA_REG_FR, _lora_Frf >> 16);
+	_loraWriteReg(LORA_REG_FR + 1, _lora_Frf >> 8);
+	_loraWriteReg(LORA_REG_FR + 2, _lora_Frf);
+
+	return curFreq;
 }
