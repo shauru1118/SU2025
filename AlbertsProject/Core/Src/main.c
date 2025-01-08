@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
+#include <stdbool.h>
 
 /* USER CODE END Includes */
 
@@ -51,7 +52,11 @@ uint32_t MS_Data[2];
 int16_t LSM_Data[6];
 int sizeOfBufferToLora = 100;
 int32_t seaLvlPress;
+int32_t beforAlt;
+uint8_t toStart = 100;
 uint16_t roverFreq = 434; // !!!!!!!!---- YZNAT' CHASTOTY ----!!!!!!!!
+const char filename[] = "SULOG.csv";
+
 struct {
 	uint32_t time;
 	int32_t alt;
@@ -63,10 +68,10 @@ struct {
 	int32_t gyro1;
 	int32_t gyro2;
 	int32_t gyro3;
-	char flagStart;
-	char flagApag;
-	char flagResSys;
-	char flagLand;
+	bool flagStart;
+	bool flagApag;
+	bool flagResSys;
+	bool flagLand;
 
 } SensorsData;
 
@@ -324,10 +329,10 @@ static void MX_GPIO_Init(void) {
 /* USER CODE BEGIN 4 */
 
 void writeSD(char *str) {
-	f_open(&Fil, "SULOG.csv", FA_OPEN_ALWAYS | FA_WRITE);
+	f_open(&Fil, filename, FA_OPEN_ALWAYS | FA_WRITE);
 
 	f_lseek(&Fil, f_size(&Fil));
-	HAL_Delay(1);
+	HAL_Delay(5);
 	f_puts(str, &Fil);
 	HAL_Delay(15);
 	f_close(&Fil);
@@ -336,6 +341,8 @@ void writeSD(char *str) {
 void readData() {
 	MS_ReadData(MS_Data);
 	LSM_ReadData(LSM_Data);
+
+	beforAlt = SensorsData.alt;
 
 	SensorsData.time = HAL_GetTick();
 	SensorsData.press = MS_Data[0];
@@ -348,6 +355,20 @@ void readData() {
 	SensorsData.gyro1 = LSM_Data[0];
 	SensorsData.gyro2 = LSM_Data[1];
 	SensorsData.gyro3 = LSM_Data[2];
+
+	if (SensorsData.alt > toStart) {
+		SensorsData.flagStart = true;
+	}
+	if (SensorsData.alt == beforAlt && SensorsData.flagStart) {
+		SensorsData.flagApag = true;
+	}
+	if (SensorsData.alt <= 12000 && SensorsData.flagApag) {
+		SensorsData.flagResSys = true;
+	}
+	if ((SensorsData.alt < 200 || SensorsData.alt == beforAlt)
+			&& SensorsData.flagResSys) {
+		SensorsData.flagLand = true;
+	}
 }
 
 void writeData() {
@@ -363,13 +384,7 @@ void writeData() {
 			SensorsData.gyro3);
 //	LORA_TransmitData(buffer, sizeOfSnprintf);
 
-	f_open(&Fil, "SULOG.csv", FA_OPEN_ALWAYS | FA_WRITE);
-
-	f_lseek(&Fil, f_size(&Fil));
-	HAL_Delay(1);
-	f_puts(buffer, &Fil);
-	HAL_Delay(15);
-	f_close(&Fil);
+	writeSD(buffer);
 
 }
 
@@ -384,8 +399,8 @@ void recieveTransmitData() {
 		LORA_ChangeFreq(roverFreq);
 		LORA_TransmitData(transmitData, 10);
 		LORA_ChangeFreq(433);
+		writeSD("transmit to rover\n");
 	}
-	writeSD("transmit to rover\n");
 
 }
 
@@ -399,24 +414,6 @@ void cheakAll() {
 	LED2_GPIO_Port->ODR &= ~LED2_Pin;
 	LED3_GPIO_Port->ODR &= ~LED3_Pin;
 	LED4_GPIO_Port->ODR &= ~LED4_Pin;
-
-	if (LORA_Init(&hspi1, LORA_NSS_GPIO_Port, LORA_NSS_Pin)) {
-		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-	}
-
-	MS_Init(&hspi1, MS_NSS_GPIO_Port, MS_NSS_Pin);
-
-	if (LSM_Init(&hspi1, LSM_NSS_GPIO_Port, LSM_NSS_Pin)) {
-		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-		HAL_Delay(300);
-		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-		HAL_Delay(300);
-		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-		HAL_Delay(300);
-		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
-	}
 
 	FR_Status = f_mount(&FatFs, SDPath, 1);
 
@@ -435,11 +432,40 @@ void cheakAll() {
 
 	}
 
-	f_unlink("SULOG.csv");
+	f_unlink(filename);
 
-	f_open(&Fil, "SULOG.csv", FA_CREATE_ALWAYS | FA_WRITE);
-	f_puts("BEFOR WHILE \n", &Fil);
+	f_open(&Fil, filename, FA_CREATE_ALWAYS | FA_WRITE);
+	f_puts("Start SETUP\n", &Fil);
 	f_close(&Fil);
+
+	writeSD("SD GOOD\n");
+
+	if (LORA_Init(&hspi1, LORA_NSS_GPIO_Port, LORA_NSS_Pin)) {
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+		HAL_Delay(1000);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+	} else {
+		writeSD("LoRa GOOD\n");
+	}
+
+	MS_Init(&hspi1, MS_NSS_GPIO_Port, MS_NSS_Pin);
+
+	if (LSM_Init(&hspi1, LSM_NSS_GPIO_Port, LSM_NSS_Pin)) {
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+		HAL_Delay(300);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+		HAL_Delay(300);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+		HAL_Delay(300);
+		HAL_GPIO_TogglePin(LED3_GPIO_Port, LED3_Pin);
+	} else {
+		writeSD("LSM GOOD\n");
+	}
+
+	writeSD("Start LOOP\n");
+
+	writeSD(
+			"name;time;height;pressure;temperature;accel_x;accel_y;accel_z;gyro_x;gyro_y;gyro_z;flag_start;flag_apag;flag_ressys;flag_land;\n");
 }
 
 void getSeaLvlPress() {
