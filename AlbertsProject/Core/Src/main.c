@@ -54,6 +54,8 @@ int sizeOfBufferToLora = 100;
 int32_t seaLvlPress;
 int32_t beforAlt;
 uint8_t toStart = 100;
+uint32_t timeToSend = 0;
+uint32_t timeToWrite = 0;
 uint16_t roverFreq = 434; // !!!!!!!!---- YZNAT' CHASTOTY ----!!!!!!!!
 const char filename[] = "SULOG.csv";
 
@@ -70,10 +72,15 @@ struct {
 	int32_t gyro3;
 	bool flagStart;
 	bool flagApag;
-	bool flagResSys;
 	bool flagLand;
 
 } SensorsData;
+
+enum {
+	START,
+	FLY,
+	LAND
+} mode;
 
 FATFS FatFs;
 FIL Fil;
@@ -91,7 +98,7 @@ static void MX_SPI1_Init(void);
 static void MX_SDIO_SD_Init(void);
 /* USER CODE BEGIN PFP */
 void cheakAll(void);
-void getSeaLvlPress(void);
+void initVariables(void);
 void readData(void);
 void writeData(void);
 void recieveTransmitData(void);
@@ -137,7 +144,7 @@ int main(void) {
 	/* USER CODE BEGIN 2 */
 
 	cheakAll();
-	getSeaLvlPress();
+	initVariables();
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -346,8 +353,8 @@ void readData() {
 
 	SensorsData.time = HAL_GetTick();
 	SensorsData.press = MS_Data[0];
-	SensorsData.alt = (int32_t) ((SensorsData.press - seaLvlPress)
-			/ 133.32239023154 * 10.5 * 100);
+	SensorsData.alt = (int32_t) 4433000
+			* (1.0f - pow((float) SensorsData.press / seaLvlPress, 0.1903)); //(int32_t) ((SensorsData.press - seaLvlPress) / 133.32239023154 * 10.5 * 100);
 	SensorsData.temp = MS_Data[1];
 	SensorsData.accel1 = LSM_Data[3];
 	SensorsData.accel2 = LSM_Data[4];
@@ -358,33 +365,69 @@ void readData() {
 
 	if (SensorsData.alt > toStart) {
 		SensorsData.flagStart = true;
+		mode = FLY;
 	}
 	if (SensorsData.alt == beforAlt && SensorsData.flagStart) {
 		SensorsData.flagApag = true;
 	}
-	if (SensorsData.alt <= 12000 && SensorsData.flagApag) {
-		SensorsData.flagResSys = true;
-	}
+
 	if ((SensorsData.alt < 200 || SensorsData.alt == beforAlt)
-			&& SensorsData.flagResSys) {
+			&& SensorsData.flagApag) {
 		SensorsData.flagLand = true;
+		mode = LAND;
 	}
 }
 
 void writeData() {
 
-	char buffer[sizeOfBufferToLora];
+	if (HAL_GetTick() - timeToWrite >= 100) {
 
-//	uint8_t sizeOfSnprintf =
-	snprintf(buffer, sizeOfBufferToLora,
-			"%s;%ld;%ld;%ld;%ld;%ld;%ld;%ld;%ld;%ld;%ld;1;1;1;1;\n", "SU",
-			SensorsData.time, SensorsData.alt, SensorsData.press,
-			SensorsData.temp, SensorsData.accel1, SensorsData.accel2,
-			SensorsData.accel3, SensorsData.gyro1, SensorsData.gyro2,
-			SensorsData.gyro3);
-//	LORA_TransmitData(buffer, sizeOfSnprintf);
+		char buffer[sizeOfBufferToLora];
 
-	writeSD(buffer);
+		snprintf(buffer, sizeOfBufferToLora,
+				"%s;%ld;%ld;%ld;%ld;%ld;%ld;%ld;%ld;%ld;%ld;%d;%d;%d;\n", "SU",
+				SensorsData.time, SensorsData.alt, SensorsData.press,
+				SensorsData.temp, SensorsData.accel1, SensorsData.accel2,
+				SensorsData.accel3, SensorsData.gyro1, SensorsData.gyro2,
+				SensorsData.gyro3, SensorsData.flagStart, SensorsData.flagApag,
+				SensorsData.flagLand);
+
+		writeSD(buffer);
+
+		timeToWrite = HAL_GetTick();
+	}
+
+	if (HAL_GetTick() - timeToSend >= 1000) {
+
+		int cutPacketSize = sizeOfBufferToLora / 3;
+
+		char bufferToLoRa1[cutPacketSize];
+		char bufferToLoRa2[cutPacketSize];
+		char bufferToLoRa3[cutPacketSize];
+
+		int sizeOfSnprintf1 = snprintf(bufferToLoRa1, cutPacketSize,
+				"%s;%ld;%ld;", "SU", SensorsData.time, SensorsData.alt);
+		int sizeOfSnprintf2 = snprintf(bufferToLoRa2, cutPacketSize,
+				"%ld;%ld;%ld;%ld;", SensorsData.press, SensorsData.temp,
+				SensorsData.accel1, SensorsData.accel2);
+		int sizeOfSnprintf3 = snprintf(bufferToLoRa3, cutPacketSize,
+				"%ld;%d;%d;%d;", SensorsData.accel3, SensorsData.flagStart,
+				SensorsData.flagApag, SensorsData.flagLand);
+
+		LORA_TransmitData(bufferToLoRa1, sizeOfSnprintf1);
+		LORA_TransmitData(bufferToLoRa2, sizeOfSnprintf2);
+		LORA_TransmitData(bufferToLoRa3, sizeOfSnprintf3);
+
+//		int sizeOfSnprintf = snprintf(bufferToLoRa, sizeOfBufferToLora,
+//				"%s;%ld;%ld;%ld;%ld;%ld;%ld;%ld;%d;%d;%d;\n", "SU",
+//				SensorsData.time, SensorsData.alt, SensorsData.press,
+//				SensorsData.temp, SensorsData.accel1, SensorsData.accel2,
+//				SensorsData.accel3, SensorsData.flagStart, SensorsData.flagApag,
+//				SensorsData.flagLand);
+		//
+//		LORA_TransmitData(buffer, sizeOfSnprintf);
+		timeToSend = HAL_GetTick();
+	}
 
 }
 
@@ -465,12 +508,17 @@ void cheakAll() {
 	writeSD("Start LOOP\n");
 
 	writeSD(
-			"name;time;height;pressure;temperature;accel_x;accel_y;accel_z;gyro_x;gyro_y;gyro_z;flag_start;flag_apag;flag_ressys;flag_land;\n");
+			"name;time;height;pressure;temperature;accel_x;accel_y;accel_z;gyro_x;gyro_y;gyro_z;flag_start;flag_apag;flag_land;\n");
+
 }
 
-void getSeaLvlPress() {
+void initVariables() {
 	MS_ReadData(MS_Data);
 	seaLvlPress = MS_Data[0];
+	SensorsData.flagStart = false;
+	SensorsData.flagApag = false;
+	SensorsData.flagLand = false;
+	mode = START;
 }
 
 /* USER CODE END 4 */
