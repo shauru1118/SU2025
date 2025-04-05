@@ -138,7 +138,6 @@ int main(void) {
 	while (1) {
 		uint8_t packetSize = LORA_ReceiveData(receiveData);
 
-
 		if (packetSize) {
 			CDC_Transmit_FS(receiveData, packetSize);
 			HAL_GPIO_TogglePin(LED_RX_GPIO_Port, LED_RX_Pin);
