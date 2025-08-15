@@ -1,0 +1,6 @@
+../Core/Src/myLora.c:19:9:LORA_Init	32	static
+../Core/Src/myLora.c:70:9:_loraReadReg	16	static
+../Core/Src/myLora.c:78:6:_loraWriteReg	16	static
+../Core/Src/myLora.c:86:9:LORA_ReceiveData	24	static
+../Core/Src/myLora.c:121:6:LORA_TransmitData	24	static
+../Core/Src/myLora.c:146:10:LORA_ChangeFreq	24	static

@@ -1,0 +1,120 @@
+/*
+ * ms5611.c
+ *
+ *  Created on: Jul 26, 2025
+ *      Author: sargs
+ */
+
+#include "ms5611.h"
+#include <math.h>
+
+static uint16_t C[7];
+static MS5611_t dev_ctx;
+
+static void cs_low() {
+	HAL_GPIO_WritePin(dev_ctx.cs_port, dev_ctx.cs_pin, GPIO_PIN_RESET);
+}
+
+static void cs_high() {
+	HAL_GPIO_WritePin(dev_ctx.cs_port, dev_ctx.cs_pin, GPIO_PIN_SET);
+}
+
+static void send_cmd(uint8_t cmd) {
+	cs_low();
+	HAL_SPI_Transmit(dev_ctx.hspi, &cmd, 1, HAL_MAX_DELAY);
+	cs_high();
+}
+
+static void send_to_read_D1() {
+	send_cmd(0x48);
+}
+
+static void send_to_read_D2() {
+	send_cmd(0x58);
+}
+
+static uint32_t read_adc() {
+	uint8_t cmd = 0x00;
+	uint8_t rx[3];
+
+	cs_low();
+	HAL_SPI_Transmit(dev_ctx.hspi, &cmd, 1, HAL_MAX_DELAY);
+	HAL_SPI_Receive(dev_ctx.hspi, rx, sizeof(rx), HAL_MAX_DELAY);
+	cs_high();
+
+	return (rx[0] << 16) | (rx[1] << 8) | (rx[2]);
+}
+
+static uint16_t read_prom(uint8_t index) {
+	uint8_t cmd = 0xA0 + index * 2;
+	uint8_t rx[2];
+
+	cs_low();
+	HAL_SPI_Transmit(dev_ctx.hspi, &cmd, 1, HAL_MAX_DELAY);
+	HAL_SPI_Receive(dev_ctx.hspi, rx, 2, HAL_MAX_DELAY);
+	cs_high();
+	return (rx[0] << 8) | rx[1];
+}
+
+void MS5611_Init(MS5611_t *dev) { //SPI_HandleTypeDef *hspi, GPIO_TypeDef *cs_port, uint16_t cs_pin) {
+	dev_ctx = *dev;
+
+	send_cmd(0x1E);
+	HAL_Delay(3);
+
+	for (uint8_t i = 1; i <= 6; i++) {
+		C[i] = read_prom(i);
+	}
+}
+
+void MS5611_ReadAll(MS5611_t *dev, int32_t* temperature, int32_t* pressure, int32_t* altitude) {
+	dev_ctx = *dev;
+
+	send_to_read_D1();
+	HAL_Delay(10);
+	uint32_t D1 = read_adc();
+
+	send_to_read_D2();
+	HAL_Delay(10);
+	uint32_t D2 = read_adc();
+
+	int32_t dT = D2 - ((int32_t) C[5] * 256);
+	int32_t TEMP = 2000 + ((int64_t) dT * C[6]) / 8388608;
+
+	int64_t OFF = (int64_t) C[2] * 65536 + ((int64_t) C[4] * dT) / 128;
+	int64_t SENS = (int64_t) C[1] * 32768 + ((int64_t) C[3] * dT) / 256;
+
+	if (TEMP < 2000) {
+		int32_t T2 = (dT * dT) >> 31;
+		int64_t OFF2 = 5 * ((TEMP - 2000LL) * (TEMP - 2000LL)) >> 1;
+		int64_t SENS2 = 5 * ((TEMP - 2000LL) * (TEMP - 2000LL)) >> 2;
+		TEMP -= T2;
+		OFF -= OFF2;
+		SENS -= SENS2;
+	}
+
+	int32_t P = (((D1 * SENS) / 2097152) - OFF) / 32768;
+
+	float pressure_hPa = P / 100.0f;
+	float h = 44330.0f * (1.0f - powf(pressure_hPa / 1013.25f, 0.1903f));
+
+	*temperature = TEMP;
+	*pressure = P;
+	*altitude = h;
+}
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//

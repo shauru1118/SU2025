@@ -1,0 +1,63 @@
+/*
+ * ms5611.c
+ *
+ *  Created on: Jul 26, 2025
+ *      Author: sargs
+ */
+
+#include "ms5611.h"
+#include <math.h>
+
+static uint16_t c[7];
+static MS5611_t dev_ctx;
+
+static void cs_low() {
+	HAL_GPIO_WritePin(dev_ctx.cs_port, dev_ctx.cs_pin, GPIO_PIN_RESET);
+}
+
+static void cs_high() {
+	HAL_GPIO_WritePin(dev_ctx.cs_port, dev_ctx.cs_pin, GPIO_PIN_SET);
+}
+
+static void send_cmd(uint8_t cmd) {
+	cs_low();
+	HAL_SPI_Transmit(dev_ctx.hspi, &cmd, 1, HAL_MAX_DELAY);
+	cs_high();
+}
+
+static void send_to_read_D1() {
+	send_cmd(0x48);
+}
+
+static void send_to_read_D2() {
+	send_cmd(0x58);
+}
+
+static uint32_t read_adc() {
+	uint8_t cmd = 0x00;
+	uint8_t rx[3];
+
+	cs_low();
+	HAL_SPI_Transmit(dev_ctx.hspi, &cmd, 1, HAL_MAX_DELAY);
+	HAL_SPI_Receive(dev_ctx.hspi, rx, sizeof(rx), HAL_MAX_DELAY);
+	cs_high();
+
+	return (rx[0] << 16) | (rx[1] << 8) | (rx[2]);
+}
+
+static uint16_t read_prom(uint8_t index) {
+	uint8_t cmd = 0xA0 + index * 2;
+	uint8_t rx[2];
+
+	cs_low();
+	HAL_SPI_Transmit(dev_ctx.hspi, &cmd, 1, HAL_MAX_DELAY);
+	HAL_SPI_Receive(dev_ctx.hspi, rx, 2, HAL_MAX_DELAY);
+	cs_high();
+	return (rx[0] << 8) | rx[1];
+}
+
+void MS5611_Init(MS5611_t *dev,) //SPI_HandleTypeDef *hspi, GPIO_TypeDef *cs_port, uint16_t cs_pin);
+{
+
+}
+void MS5611_ReadAll(MS5611_t *dev,); // int32_t* temperature, int32_t* pressure, int32_t* altitude);

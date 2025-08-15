@@ -1,0 +1,21 @@
+/*
+ * ms5611.h
+ *
+ *  Created on: Jul 26, 2025
+ *      Author: sargs
+ */
+
+#ifndef INC_MS5611_H_
+#define INC_MS5611_H_
+
+#include "main.h"
+
+typedef struct {
+	SPI_HandleTypeDef* hspi;
+	GPIO_TypeDef cs_port;
+	uint16_t cs_pin;
+} MS5611_t;
+
+
+
+#endif /* INC_MS5611_H_ */

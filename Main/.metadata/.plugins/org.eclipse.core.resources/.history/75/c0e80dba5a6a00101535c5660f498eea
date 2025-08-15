@@ -1,0 +1,28 @@
+/*
+ * KUP.c
+ *
+ *  Created on: Jul 13, 2025
+ *      Author: sargs
+ */
+
+#include "KUP.h"
+#include "main.h"
+#include "ms5611.h"
+
+#define ERROR 0xFF
+#define SUCCESS 0xAA
+
+
+extern SPI_HandleTypeDef hspi1;
+
+static MS5611_t ms = { .hspi = hspi1, .cs_port = MS_NSS_GPIO_Port, .cs_pin =
+MS_NSS_Pin };
+
+int KUP_Init() {
+
+	return SUCCESS;
+}
+
+int KUP_Upgrade() {
+	return SUCCESS;
+}

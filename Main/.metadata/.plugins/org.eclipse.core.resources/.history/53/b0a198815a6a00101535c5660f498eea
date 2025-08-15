@@ -1,0 +1,18 @@
+/*
+ * KUP.c
+ *
+ *  Created on: Jul 13, 2025
+ *      Author: sargs
+ */
+
+#include "KUP.h"
+
+static MS5611_t ms = { .hspi };
+
+int KUP_Init() {
+	return SUCCESS;
+}
+
+int KUP_Upgrade() {
+	return SUCCESS;
+}

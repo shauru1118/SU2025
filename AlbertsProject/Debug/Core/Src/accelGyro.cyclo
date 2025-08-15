@@ -1,4 +1,0 @@
-../Core/Src/accelGyro.c:17:9:LSM_Init	2
-../Core/Src/accelGyro.c:36:6:LSM_ReadData	2
-../Core/Src/accelGyro.c:53:9:_lsmReadReg	1
-../Core/Src/accelGyro.c:62:6:_lsmWriteReg	1

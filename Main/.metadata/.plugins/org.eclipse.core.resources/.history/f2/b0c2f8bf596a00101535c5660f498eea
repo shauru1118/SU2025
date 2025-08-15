@@ -1,0 +1,19 @@
+/*
+ * KUP.h
+ *
+ *  Created on: Jul 13, 2025
+ *      Author: sargs
+ */
+
+#pragma once
+
+
+#include "main.h"
+#include "ms5611.h"
+
+#define ERROR 0xFF
+#define SUCCESS 0xAA
+
+int KUP_Init();
+
+int KUP_Upgrade();

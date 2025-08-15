@@ -1,6 +1,0 @@
-../Core/Src/myLora.c:19:9:LORA_Init	2
-../Core/Src/myLora.c:70:9:_loraReadReg	1
-../Core/Src/myLora.c:78:6:_loraWriteReg	1
-../Core/Src/myLora.c:86:9:LORA_ReceiveData	3
-../Core/Src/myLora.c:121:6:LORA_TransmitData	3
-../Core/Src/myLora.c:146:10:LORA_ChangeFreq	1

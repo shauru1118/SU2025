@@ -1,0 +1,17 @@
+/*
+ * dataSave.c
+ *
+ *  Created on: Jul 26, 2025
+ *      Author: sargs
+ */
+
+
+#include "dataSave.h"
+#include "main.h"
+
+typedef struct {
+	uint32 time;
+	int16_t temperature;
+	uint32_t pressure;
+	int16_t accel[3];
+} allData;

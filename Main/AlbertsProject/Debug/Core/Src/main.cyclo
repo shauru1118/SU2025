@@ -1,0 +1,12 @@
+../Core/Src/main.c:157:5:main	3
+../Core/Src/main.c:241:6:SystemClock_Config	3
+../Core/Src/main.c:284:6:writeSD_rData	1
+../Core/Src/main.c:296:6:writeSD	1
+../Core/Src/main.c:306:6:readData	7
+../Core/Src/main.c:340:6:writeData	3
+../Core/Src/main.c:414:6:recieveTransmitData	2
+../Core/Src/main.c:430:6:cheakAll	4
+../Core/Src/main.c:495:6:initVariables	1
+../Core/Src/main.c:504:6:SvSend	1
+../Core/Src/main.c:507:6:SvGet	1
+../Core/Src/main.c:529:6:Error_Handler	1
