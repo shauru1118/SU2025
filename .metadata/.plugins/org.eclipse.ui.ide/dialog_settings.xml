@@ -19,6 +19,7 @@
 		<item key="SmartImportRootWizardPage.STORE_NESTED_PROJECTS" value="true"/>
 		<item key="SmartImportRootWizardPage.STORE_CONFIGURE_NATURES" value="true"/>
 		<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+			<item value="D:\SU2025\MainNEW"/>
 			<item value="P:\SU2025\Priemka"/>
 			<item value="P:\SU2025\LoRaNew"/>
 			<item value="P:\SU2025\Lora_New"/>
@@ -30,7 +31,7 @@
 			<item key="DIALOG_Y_ORIGIN" value="257"/>
 			<item key="DIALOG_WIDTH" value="984"/>
 			<item key="DIALOG_HEIGHT" value="837"/>
-			<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-18|0|0|0|400|0|0|0|1|0|0|5|0|Segoe UI"/>
+			<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-18|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
 		</section>
 	</section>
 	<section name="ChooseWorkspaceDialogSettings">
